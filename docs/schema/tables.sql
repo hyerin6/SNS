@@ -28,11 +28,10 @@ CREATE INDEX fk_following_user ON follow (following_id);
 CREATE TABLE post
 (
     id         bigint NOT NULL PRIMARY KEY,
-    user_id    bigint,
+    user_id    bigint NOT NULL,
     content    text,
     created_at datetime,
     updated_at datetime,
-    CONSTRAINT unq_post_user_id UNIQUE (user_id),
     CONSTRAINT fk_post_user FOREIGN KEY (user_id) REFERENCES `user` (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
