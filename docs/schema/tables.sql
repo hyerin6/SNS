@@ -28,7 +28,7 @@ CREATE INDEX fk_following_user ON follow (following_id);
 CREATE TABLE post
 (
     id         bigint NOT NULL PRIMARY KEY,
-    user_id    bigint NOT NULL,
+    user_id    bigint,
     content    text,
     created_at datetime,
     updated_at datetime,
@@ -42,7 +42,7 @@ CREATE TABLE comment
     content    text   NOT NULL,
     user_id    bigint NOT NULL,
     post_id    bigint NOT NULL,
-    parent_id  bigint NOT NULL,
+    parent_id  bigint,
     created_at datetime,
     updated_at datetime,
     CONSTRAINT fk_comment_parent_0 FOREIGN KEY (parent_id) REFERENCES comment (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
