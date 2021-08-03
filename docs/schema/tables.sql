@@ -18,11 +18,12 @@ CREATE TABLE follow
     created_at   datetime,
     updated_at   datetime,
     CONSTRAINT pk_follow PRIMARY KEY (follower_id, following_id),
-    CONSTRAINT fk_follower FOREIGN KEY (follower_id) REFERENCES `user` (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    CONSTRAINT fk_following FOREIGN KEY (following_id) REFERENCES `user` (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+    CONSTRAINT fk_follower FOREIGN KEY (follower_id) REFERENCES `user` (id) ON DELETE CASCADE ON UPDATE NO ACTION,
+    CONSTRAINT fk_following FOREIGN KEY (following_id) REFERENCES `user` (id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 CREATE INDEX fk_follower_user ON follow (follower_id);
+
 CREATE INDEX fk_following_user ON follow (following_id);
 
 CREATE TABLE post
@@ -32,8 +33,10 @@ CREATE TABLE post
     content    text,
     created_at datetime,
     updated_at datetime,
-    CONSTRAINT fk_post_user FOREIGN KEY (user_id) REFERENCES `user` (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+    CONSTRAINT fk_post_user FOREIGN KEY (user_id) REFERENCES `user` (id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
+
+CREATE INDEX fk_post_user ON post (user_id);
 
 CREATE TABLE comment
 (
@@ -44,13 +47,14 @@ CREATE TABLE comment
     parent_id  bigint,
     created_at datetime,
     updated_at datetime,
-    CONSTRAINT fk_comment_parent_0 FOREIGN KEY (parent_id) REFERENCES comment (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
-    CONSTRAINT fk_comment_post_0 FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
-    CONSTRAINT fk_comment_user_0 FOREIGN KEY (user_id) REFERENCES `user` (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+    CONSTRAINT fk_comment_parent_0 FOREIGN KEY (parent_id) REFERENCES comment (id) ON DELETE CASCADE ON UPDATE RESTRICT,
+    CONSTRAINT fk_comment_post_0 FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE CASCADE ON UPDATE RESTRICT,
+    CONSTRAINT fk_comment_user_0 FOREIGN KEY (user_id) REFERENCES `user` (id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
-CREATE INDEX fk_comment_post_parent ON comment (post_id, parent_id);
+CREATE INDEX fk_comment_parent ON comment (parent_id);
 CREATE INDEX fk_comment_post ON comment (post_id);
+CREATE INDEX fk_comment_post_parent ON comment (post_id, parent_id);
 CREATE INDEX fk_comment_user ON comment (user_id);
 
 CREATE TABLE image
@@ -60,7 +64,7 @@ CREATE TABLE image
     path       varchar(100) NOT NULL,
     created_at datetime,
     updated_at datetime,
-    CONSTRAINT fk_image_post_0 FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+    CONSTRAINT fk_image_post_0 FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 CREATE INDEX fk_image_post ON image (post_id);
@@ -72,8 +76,8 @@ CREATE TABLE `like`
     created_at datetime,
     updated_at datetime,
     CONSTRAINT pk_like PRIMARY KEY (user_id, post_id),
-    CONSTRAINT fk_like_user FOREIGN KEY (user_id) REFERENCES `user` (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    CONSTRAINT fk_like_post FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+    CONSTRAINT fk_like_post FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE CASCADE ON UPDATE RESTRICT,
+    CONSTRAINT fk_like_user FOREIGN KEY (user_id) REFERENCES `user` (id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 CREATE INDEX fk_like_post ON `like` (post_id);
