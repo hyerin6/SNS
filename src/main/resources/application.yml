@@ -7,10 +7,14 @@ spring:
     url: jdbc:h2:mem:test
     username: sa
     password:
-
   jpa:
     show-sql: true
+    naming:
+      hibernate:
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
         format_sql: true
+        # 데이터베이스 키워드/예약어 충돌로 스키마 생성이 실패하는 문제 해결
         globally_quoted_identifiers: true

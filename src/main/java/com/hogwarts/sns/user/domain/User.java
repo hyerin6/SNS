@@ -27,9 +27,9 @@ public class User {
 
 	@CreatedDate
 	@Column(updatable = false)
-	private LocalDateTime created_at;
+	private LocalDateTime createdAt;
 
 	@LastModifiedDate
-	private LocalDateTime updated_at;
+	private LocalDateTime updatedAt;
 
 }
