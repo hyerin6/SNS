@@ -19,6 +19,8 @@ public class User {
 
 	private String principal;
 
+	private String refreshToken;
+
 	private String name;
 
 	private String email;
