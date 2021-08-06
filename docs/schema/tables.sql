@@ -72,12 +72,12 @@ CREATE INDEX fk_image_post ON image (post_id);
 
 CREATE TABLE `like`
 (
-    id         bigint      NOT NULL PRIMARY KEY,
-    user_id    bigint      NOT NULL,
-    parent_id  bigint      NOT NULL,
-    created_at datetime    NOT NULL,
+    id         bigint   NOT NULL PRIMARY KEY,
+    user_id    bigint   NOT NULL,
+    parent_id  bigint   NOT NULL,
+    created_at datetime NOT NULL,
     updated_at datetime,
-    `type`     varchar(30) NOT NULL,
+    `type`     int      NOT NULL,
     CONSTRAINT fk_like_user FOREIGN KEY (user_id) REFERENCES `user` (id) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 

@@ -3,9 +3,8 @@ package com.hogwarts.sns.like.domain;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +14,8 @@ import javax.persistence.ManyToOne;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import com.hogwarts.sns.like.domain.enums.LikeTypeConverter;
+import com.hogwarts.sns.like.domain.enums.Type;
 import com.hogwarts.sns.user.domain.User;
 
 @Entity
@@ -23,7 +24,7 @@ public class Like {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Enumerated(EnumType.STRING)
+	@Convert(converter = LikeTypeConverter.class)
 	private Type type;
 
 	@ManyToOne

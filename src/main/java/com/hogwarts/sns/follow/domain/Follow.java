@@ -1,39 +1,50 @@
 package com.hogwarts.sns.follow.domain;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import com.hogwarts.sns.user.domain.User;
 
-@Entity
-public class Follow {
-	@EmbeddedId
-	private FollowId id;
+import lombok.Data;
 
-	@MapsId("follower_id")
+@Entity
+@IdClass(Follow.PK.class)
+public class Follow {
+
+	@Id
 	@ManyToOne
 	@JoinColumn(name = "follower_id")
 	private User follower;
 
-	@MapsId("following_id")
+	@Id
 	@ManyToOne
 	@JoinColumn(name = "following_id")
 	private User following;
 
 	@CreatedDate
-	@Column(updatable = false)
+	@Column(updatable = false, nullable = false)
 	private LocalDateTime createdAt;
 
 	@LastModifiedDate
 	private LocalDateTime updatedAt;
+
+	@Data
+	public static class PK implements Serializable {
+		@Column(name = "follower_id")
+		private long follower;
+
+		@Column(name = "following_id")
+		private long following;
+	}
 
 }
