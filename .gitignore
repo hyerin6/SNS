@@ -38,3 +38,8 @@ out/
 
 ### mac ###
 .DS_Store
+
+*.yml
+!src/main/resources/application-test.yml
+
+
