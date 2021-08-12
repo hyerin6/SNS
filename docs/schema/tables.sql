@@ -28,7 +28,7 @@ CREATE INDEX fk_following_user ON follow (following_id);
 
 CREATE TABLE post
 (
-    id         bigint   NOT NULL PRIMARY KEY,
+    id         bigint   NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_id    bigint   NOT NULL,
     content    text,
     created_at datetime NOT NULL,
@@ -40,7 +40,7 @@ CREATE INDEX fk_post_user ON post (user_id);
 
 CREATE TABLE comment
 (
-    id         bigint   NOT NULL PRIMARY KEY,
+    id         bigint   NOT NULL AUTO_INCREMENT PRIMARY KEY,
     content    text     NOT NULL,
     user_id    bigint   NOT NULL,
     post_id    bigint   NOT NULL,
@@ -59,9 +59,10 @@ CREATE INDEX fk_comment_user ON comment (user_id);
 
 CREATE TABLE image
 (
-    id         bigint       NOT NULL PRIMARY KEY,
+    id         bigint       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     post_id    bigint       NOT NULL,
     path       varchar(100) NOT NULL,
+    name       varchar(100) NOT NULL,
     created_at datetime     NOT NULL,
     updated_at datetime,
     CONSTRAINT fk_image_post_0 FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE CASCADE ON UPDATE RESTRICT
@@ -72,7 +73,7 @@ CREATE INDEX fk_image_post ON image (post_id);
 
 CREATE TABLE `like`
 (
-    id         bigint   NOT NULL PRIMARY KEY,
+    id         bigint   NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_id    bigint   NOT NULL,
     parent_id  bigint   NOT NULL,
     created_at datetime NOT NULL,

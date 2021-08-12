@@ -11,8 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.hogwarts.sns.like.domain.enums.LikeTypeConverter;
 import com.hogwarts.sns.like.domain.enums.Type;
@@ -33,11 +33,11 @@ public class Like {
 
 	private Long parentId;
 
-	@CreatedDate
-	@Column(updatable = false)
+	@CreationTimestamp
+	@Column(updatable = false, nullable = false)
 	private LocalDateTime createdAt;
 
-	@LastModifiedDate
+	@UpdateTimestamp
 	private LocalDateTime updatedAt;
 
 }
