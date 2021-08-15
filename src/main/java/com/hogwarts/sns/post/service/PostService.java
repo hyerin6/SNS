@@ -1,5 +1,7 @@
 package com.hogwarts.sns.post.service;
 
+import com.hogwarts.sns.exception.ResponseException;
+import com.hogwarts.sns.exception.e4xx.NotFoundException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -24,48 +26,49 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class PostService {
 
-	private final PostRepository postRepository;
-	private final ImageService imageService;
+    private final PostRepository postRepository;
+    private final ImageService imageService;
 
-	@Transactional
-	public void addPost(User user, CreatePostRequest request) {
-		Post post = Post.builder()
-			.user(user)
-			.content(request.getContent())
-			.build();
+    @Transactional
+    public void addPost(User user, CreatePostRequest request) {
+        Post post = Post.builder()
+                .user(user)
+                .content(request.getContent())
+                .build();
 
-		postRepository.save(post);
+        postRepository.save(post);
 
-		if (request.getImages().size() == 1) {
-			imageService.addImage(post, request.getImages().get(0));
-		} else if (!request.getImages().isEmpty()) {
-			imageService.addImages(post, request.getImages());
-		}
-	}
+        if (request.getImages().size() == 1) {
+            imageService.addImage(post, request.getImages().get(0));
+        } else if (!request.getImages().isEmpty()) {
+            imageService.addImages(post, request.getImages());
+        }
+    }
 
-	public PostResponse getPost(Long id) {
-		Post post = postRepository.findById(id)
-			.orElseThrow(() -> new NoSuchElementException("해당 게시물이 존재하지 않습니다."));
+    public PostResponse getPost(Long id) throws ResponseException {
+        Post post = postRepository.findById(id)
+                .orElseThrow(NotFoundException.POST);
 
-		List<Image> images = imageService.getImages(id);
+        List<Image> images = imageService.getImages(id);
 
-		return PostResponse.builder()
-			.post(post)
-			.images(images)
-			.build();
-	}
+        return PostResponse.builder()
+                .post(post)
+                .images(images)
+                .build();
+    }
 
-	@Transactional
-	public void modifyPost(Long id, ModifyPostRequest request) {
-		Post post = postRepository.findById(id)
-			.orElseThrow(() -> new NoSuchElementException("해당 게시물이 존재하지 않습니다."));
-		post.setContent(request.getContent());
-	}
+    @Transactional
+    public void modifyPost(Long id, ModifyPostRequest request) throws ResponseException {
+        Post post = postRepository.findById(id)
+                .orElseThrow(NotFoundException.POST);
 
-	@Transactional
-	public void deletePost(Long id) {
-		imageService.delete(id);
-		postRepository.deleteById(id);
-	}
+        post.setContent(request.getContent());
+    }
+
+    @Transactional
+    public void deletePost(Long id) {
+        imageService.delete(id);
+        postRepository.deleteById(id);
+    }
 
 }
