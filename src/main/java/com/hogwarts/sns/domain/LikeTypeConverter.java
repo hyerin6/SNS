@@ -1,4 +1,4 @@
-package com.hogwarts.sns.like.domain.enums;
+package com.hogwarts.sns.domain;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
