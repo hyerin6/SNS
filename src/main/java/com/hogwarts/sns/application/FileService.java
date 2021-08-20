@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.hogwarts.sns.domain.response.FileInfo;
+import com.hogwarts.sns.presentation.response.FileInfo;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,7 +35,7 @@ public class FileService {
 
 		return fileInfos;
 	}
-	
+
 	public void deleteFiles(List<FileInfo> fileInfos) {
 		for (FileInfo info : fileInfos) {
 			s3Service.deleteS3Object(info.getFileName());

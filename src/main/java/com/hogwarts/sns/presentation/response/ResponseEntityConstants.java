@@ -1,4 +1,4 @@
-package com.hogwarts.sns.domain.response;
+package com.hogwarts.sns.presentation.response;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
