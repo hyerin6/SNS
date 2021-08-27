@@ -2,8 +2,6 @@ package com.hogwarts.sns.presentation;
 
 import static com.hogwarts.sns.presentation.response.ResponseEntityConstants.*;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +12,7 @@ import com.hogwarts.sns.application.FollowService;
 import com.hogwarts.sns.application.UserService;
 import com.hogwarts.sns.domain.User;
 import com.hogwarts.sns.exception.ResponseException;
+import com.hogwarts.sns.presentation.response.UsersResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,13 +40,13 @@ public class FollowController {
 	}
 
 	@GetMapping("/followers")
-	public ResponseEntity<List<User>> getFollowers() throws ResponseException {
+	public ResponseEntity<UsersResponse> getFollowers() throws ResponseException {
 		User user = userService.getUser(1L); // User CRUD 구현 후 수정
 		return ResponseEntity.ok(followService.getFollowers(user.getId()));
 	}
 
 	@GetMapping("/followings")
-	public ResponseEntity<List<User>> getFollowings() throws ResponseException {
+	public ResponseEntity<UsersResponse> getFollowings() throws ResponseException {
 		User user = userService.getUser(1L); // User CRUD 구현 후 수정
 		return ResponseEntity.ok(followService.getFollowings(user.getId()));
 	}

@@ -2,8 +2,6 @@ package com.hogwarts.sns.presentation;
 
 import static com.hogwarts.sns.presentation.response.ResponseEntityConstants.*;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hogwarts.sns.application.CommentService;
 import com.hogwarts.sns.application.PostService;
 import com.hogwarts.sns.application.UserService;
-import com.hogwarts.sns.domain.Comment;
 import com.hogwarts.sns.domain.Post;
 import com.hogwarts.sns.domain.User;
 import com.hogwarts.sns.exception.ResponseException;
 import com.hogwarts.sns.presentation.request.CreateCommentRequest;
+import com.hogwarts.sns.presentation.response.CommentsResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -46,7 +44,7 @@ public class CommentController {
 	}
 
 	@GetMapping("/comments/{postId}")
-	public ResponseEntity<List<Comment>> getComments(@PathVariable Long postId) {
+	public ResponseEntity<CommentsResponse> getComments(@PathVariable Long postId) {
 		return ResponseEntity.ok(commentService.getComments(postId));
 	}
 

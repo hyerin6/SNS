@@ -2,9 +2,8 @@ package com.hogwarts.sns.application;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hogwarts.sns.domain.Image;
 import com.hogwarts.sns.domain.Post;
@@ -38,6 +37,7 @@ public class PostService {
 		imageService.addImage(post, request.getImages());
 	}
 
+	@Transactional(readOnly = true)
 	public PostResponse getPost(Long id) throws ResponseException {
 		Post post = postRepository.findById(id)
 			.orElseThrow(NotFoundException.POST);

@@ -3,13 +3,13 @@ package com.hogwarts.sns.application;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hogwarts.sns.domain.Follow;
 import com.hogwarts.sns.domain.User;
 import com.hogwarts.sns.persistence.FollowRepository;
+import com.hogwarts.sns.presentation.response.UsersResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,14 +35,16 @@ public class FollowService {
 		followRepository.deleteById(id);
 	}
 
-	public List<User> getFollowers(Long userId) {
+	@Transactional(readOnly = true)
+	public UsersResponse getFollowers(Long userId) {
 		List<Follow> followers = followRepository.findByFollowing(userId);
-		return followers.stream().map(Follow::getFollower).collect(Collectors.toList());
+		return new UsersResponse(followers.stream().map(Follow::getFollower).collect(Collectors.toList()));
 	}
 
-	public List<User> getFollowings(Long userId) {
+	@Transactional(readOnly = true)
+	public UsersResponse getFollowings(Long userId) {
 		List<Follow> followings = followRepository.findByFollower(userId);
-		return followings.stream().map(Follow::getFollowing).collect(Collectors.toList());
+		return new UsersResponse(followings.stream().map(Follow::getFollowing).collect(Collectors.toList()));
 	}
 
 }

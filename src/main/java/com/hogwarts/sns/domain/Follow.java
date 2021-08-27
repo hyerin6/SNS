@@ -33,7 +33,6 @@ public class Follow {
 
 	@Id
 	@ManyToOne
-
 	@JoinColumn(name = "follower_id")
 	private User follower;
 
@@ -53,6 +52,9 @@ public class Follow {
 	@NoArgsConstructor
 	@AllArgsConstructor
 	public static class PK implements Serializable {
+
+		private static final long serialVersionUID = 1L;
+
 		@Column(name = "follower_id")
 		private User follower;
 

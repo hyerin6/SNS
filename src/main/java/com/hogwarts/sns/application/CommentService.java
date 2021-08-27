@@ -2,9 +2,8 @@ package com.hogwarts.sns.application;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hogwarts.sns.domain.Comment;
 import com.hogwarts.sns.domain.Post;
@@ -13,6 +12,7 @@ import com.hogwarts.sns.exception.ResponseException;
 import com.hogwarts.sns.exception.e4xx.NotFoundException;
 import com.hogwarts.sns.persistence.CommentRepository;
 import com.hogwarts.sns.presentation.request.CreateCommentRequest;
+import com.hogwarts.sns.presentation.response.CommentsResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,8 +39,10 @@ public class CommentService {
 		commentRepository.delete(comment);
 	}
 
-	public List<Comment> getComments(Long postId) {
-		return commentRepository.findByPostId(postId);
+	@Transactional(readOnly = true)
+	public CommentsResponse getComments(Long postId) {
+		List<Comment> comments = commentRepository.findByPostId(postId);
+		return new CommentsResponse(comments);
 	}
 
 }
