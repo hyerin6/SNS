@@ -1,4 +1,4 @@
-package com.hogwarts.sns.domain.request;
+package com.hogwarts.sns.presentation.request;
 
 import java.util.List;
 

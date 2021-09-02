@@ -15,8 +15,17 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
 @IdClass(Follow.PK.class)
 @Entity
@@ -40,12 +49,17 @@ public class Follow {
 	private LocalDateTime updatedAt;
 
 	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
 	public static class PK implements Serializable {
+
+		private static final long serialVersionUID = 1L;
+
 		@Column(name = "follower_id")
-		private long follower;
+		private User follower;
 
 		@Column(name = "following_id")
-		private long following;
+		private User following;
 	}
 
 }

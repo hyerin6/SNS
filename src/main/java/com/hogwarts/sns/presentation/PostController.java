@@ -1,6 +1,6 @@
 package com.hogwarts.sns.presentation;
 
-import static com.hogwarts.sns.domain.response.ResponseEntityConstants.*;
+import static com.hogwarts.sns.presentation.response.ResponseEntityConstants.*;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hogwarts.sns.application.PostService;
+import com.hogwarts.sns.application.UserService;
 import com.hogwarts.sns.domain.User;
-import com.hogwarts.sns.domain.request.CreatePostRequest;
-import com.hogwarts.sns.domain.request.ModifyPostRequest;
-import com.hogwarts.sns.domain.response.FeedResponse;
-import com.hogwarts.sns.domain.response.PostResponse;
 import com.hogwarts.sns.exception.ResponseException;
-import com.hogwarts.sns.persistence.UserRepository;
+import com.hogwarts.sns.presentation.request.CreatePostRequest;
+import com.hogwarts.sns.presentation.request.ModifyPostRequest;
+import com.hogwarts.sns.presentation.response.FeedResponse;
+import com.hogwarts.sns.presentation.response.PostResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,11 +28,11 @@ import lombok.RequiredArgsConstructor;
 public class PostController {
 
 	private final PostService postService;
-	private final UserRepository userRepository;
+	private final UserService userService;
 
 	@PostMapping("/posts")
-	public ResponseEntity<Void> create(@ModelAttribute CreatePostRequest request) {
-		User user = userRepository.findAll().get(0); // User CRUD 구현 후 수정
+	public ResponseEntity<Void> create(@ModelAttribute CreatePostRequest request) throws ResponseException {
+		User user = userService.getUser(1L); // User CRUD 구현 후 수정
 		postService.addPost(user, request);
 		return CREATED;
 	}

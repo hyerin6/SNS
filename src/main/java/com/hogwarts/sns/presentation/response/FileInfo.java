@@ -1,4 +1,4 @@
-package com.hogwarts.sns.domain.response;
+package com.hogwarts.sns.presentation.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

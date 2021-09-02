@@ -3,15 +3,14 @@ package com.hogwarts.sns.application;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hogwarts.sns.domain.Image;
 import com.hogwarts.sns.domain.Post;
-import com.hogwarts.sns.domain.response.FileInfo;
 import com.hogwarts.sns.persistence.ImageRepository;
+import com.hogwarts.sns.presentation.response.FileInfo;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,6 +33,7 @@ public class ImageService {
 		imageRepository.saveAll(images);
 	}
 
+	@Transactional(readOnly = true)
 	public List<Image> getImage(Long postId) {
 		return imageRepository.findByPostId(postId);
 	}
