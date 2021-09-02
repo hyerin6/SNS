@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hogwarts.sns.application.FollowService;
 import com.hogwarts.sns.application.UserService;
 import com.hogwarts.sns.domain.User;
-import com.hogwarts.sns.exception.ResponseException;
+import com.hogwarts.sns.presentation.exception.ResponseException;
 import com.hogwarts.sns.presentation.response.UsersResponse;
 
 import lombok.RequiredArgsConstructor;

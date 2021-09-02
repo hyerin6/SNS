@@ -15,7 +15,7 @@ import com.hogwarts.sns.application.PostService;
 import com.hogwarts.sns.application.UserService;
 import com.hogwarts.sns.domain.Post;
 import com.hogwarts.sns.domain.User;
-import com.hogwarts.sns.exception.ResponseException;
+import com.hogwarts.sns.presentation.exception.ResponseException;
 import com.hogwarts.sns.presentation.request.CreateCommentRequest;
 import com.hogwarts.sns.presentation.response.CommentsResponse;
 

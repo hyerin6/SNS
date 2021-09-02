@@ -1,4 +1,4 @@
-package com.hogwarts.sns.exception.e5xx;
+package com.hogwarts.sns.presentation.exception.e5xx;
 
 public class FileUploadException extends RuntimeException {
 

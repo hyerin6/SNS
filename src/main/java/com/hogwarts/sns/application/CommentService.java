@@ -8,9 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.hogwarts.sns.domain.Comment;
 import com.hogwarts.sns.domain.Post;
 import com.hogwarts.sns.domain.User;
-import com.hogwarts.sns.exception.ResponseException;
-import com.hogwarts.sns.exception.e4xx.NotFoundException;
 import com.hogwarts.sns.persistence.CommentRepository;
+import com.hogwarts.sns.presentation.exception.ResponseException;
+import com.hogwarts.sns.presentation.exception.e4xx.NotFoundException;
 import com.hogwarts.sns.presentation.request.CreateCommentRequest;
 import com.hogwarts.sns.presentation.response.CommentsResponse;
 

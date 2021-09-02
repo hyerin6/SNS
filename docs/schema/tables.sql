@@ -2,14 +2,13 @@ CREATE DATABASE sns DEFAULT CHARACTER SET utf8;
 
 CREATE TABLE `user`
 (
-    id            bigint       NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    principal     varchar(30),
-    refresh_token varchar(100) NOT NULL,
-    email         varchar(50),
-    name          varchar(30),
-    profile       varchar(100),
-    created_at    datetime     NOT NULL,
-    updated_at    datetime
+    id         bigint      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    uid        varchar(30) NOT NULL,
+    email      varchar(50),
+    name       varchar(30),
+    profile    varchar(100),
+    created_at datetime    NOT NULL,
+    updated_at datetime
 );
 
 CREATE TABLE follow

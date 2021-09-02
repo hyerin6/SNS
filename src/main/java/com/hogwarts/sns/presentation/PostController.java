@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hogwarts.sns.application.PostService;
 import com.hogwarts.sns.application.UserService;
 import com.hogwarts.sns.domain.User;
-import com.hogwarts.sns.exception.ResponseException;
+import com.hogwarts.sns.presentation.exception.ResponseException;
 import com.hogwarts.sns.presentation.request.CreatePostRequest;
 import com.hogwarts.sns.presentation.request.ModifyPostRequest;
 import com.hogwarts.sns.presentation.response.FeedResponse;
