@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hogwarts.sns.domain.User;
-import com.hogwarts.sns.persistence.UserRepository;
+import com.hogwarts.sns.infrastructure.persistence.UserRepository;
 import com.hogwarts.sns.presentation.exception.ResponseException;
 import com.hogwarts.sns.presentation.exception.e4xx.NotFoundException;
 

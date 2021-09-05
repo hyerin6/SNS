@@ -2,17 +2,21 @@ package com.hogwarts.sns.presentation.exception;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.ModelAndView;
 
-import com.hogwarts.sns.application.JwtService;
-import com.hogwarts.sns.application.RedisService;
-import com.hogwarts.sns.presentation.exception.e4xx.JwtException;
+import com.hogwarts.sns.infrastructure.security.AuthService;
+import com.hogwarts.sns.infrastructure.security.JwtService;
+import com.hogwarts.sns.presentation.exception.e4xx.AuthenticationException;
+import com.hogwarts.sns.presentation.exception.e4xx.ExpiredAccessTokenException;
+import com.hogwarts.sns.presentation.exception.e4xx.ExpiredRefreshTokenException;
 import com.hogwarts.sns.presentation.exception.e5xx.FileUploadException;
 
-import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,19 +27,38 @@ public class ExceptionControllerAdvice {
 
 	private final JwtService jwtService;
 
-	private final RedisService redisService;
+	private final AuthService authService;
+
+	private final RedisTemplate<String, String> redisTemplate;
 
 	@ExceptionHandler(ResponseException.class)
 	public ResponseEntity<ResponseException> processException(HttpServletRequest request, ResponseException response) {
 		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatus()));
 	}
 
-	@ExceptionHandler(ExpiredJwtException.class)
-	public void expiredJwtException() {
+	@ExceptionHandler({AuthenticationException.class, JwtException.class})
+	public ModelAndView AuthenticationException(Exception e) {
+		return new ModelAndView("/index");
 	}
 
-	@ExceptionHandler(JwtException.class)
-	public void jwtException() {
+	@ExceptionHandler(ExpiredAccessTokenException.class)
+	public ModelAndView expiredAccessTokenException(ExpiredAccessTokenException e) {
+		String uid = e.getUid();
+
+		if (!redisTemplate.hasKey(uid)) {
+			return new ModelAndView("/index");
+		}
+
+		String refreshToken = redisTemplate.opsForValue().get(uid);
+		jwtService.verifyRefreshToken(refreshToken);
+		String accessToken = jwtService.createAccessToken(uid);
+		return new ModelAndView("/login", "accessToken", accessToken);
+	}
+
+	@ExceptionHandler(ExpiredRefreshTokenException.class)
+	public ModelAndView expiredRefreshTokenException(ExpiredRefreshTokenException e) {
+		authService.invalidate(e.getUid());
+		return new ModelAndView("/index");
 	}
 
 	@ExceptionHandler(FileUploadException.class)

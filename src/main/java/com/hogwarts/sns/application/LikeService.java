@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.hogwarts.sns.domain.Like;
 import com.hogwarts.sns.domain.User;
-import com.hogwarts.sns.persistence.LikeRepository;
+import com.hogwarts.sns.infrastructure.persistence.LikeRepository;
 import com.hogwarts.sns.presentation.request.LikeRequest;
 
 import lombok.RequiredArgsConstructor;

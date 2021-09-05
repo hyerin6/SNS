@@ -1,4 +1,4 @@
-package com.hogwarts.sns.persistence;
+package com.hogwarts.sns.infrastructure.persistence;
 
 import java.util.Optional;
 

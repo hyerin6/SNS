@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.hogwarts.sns.domain.Image;
 import com.hogwarts.sns.domain.Post;
 import com.hogwarts.sns.domain.User;
-import com.hogwarts.sns.persistence.PostRepository;
+import com.hogwarts.sns.infrastructure.persistence.PostRepository;
 import com.hogwarts.sns.presentation.exception.ResponseException;
 import com.hogwarts.sns.presentation.exception.e4xx.NotFoundException;
 import com.hogwarts.sns.presentation.request.CreatePostRequest;

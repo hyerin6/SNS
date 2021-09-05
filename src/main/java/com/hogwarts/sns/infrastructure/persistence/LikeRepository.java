@@ -1,4 +1,4 @@
-package com.hogwarts.sns.persistence;
+package com.hogwarts.sns.infrastructure.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

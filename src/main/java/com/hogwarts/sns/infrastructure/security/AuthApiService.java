@@ -1,4 +1,4 @@
-package com.hogwarts.sns.application;
+package com.hogwarts.sns.infrastructure.security;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -43,13 +43,6 @@ public class AuthApiService {
 
 	@Value("${spring.security.oauth2.kakao.user-info-uri}")
 	private String userInfoUri;
-
-	public String getAuthorizationUrl() {
-		return "https://kauth.kakao.com/oauth/authorize?"
-			+ "client_id=" + clientId
-			+ "&redirect_uri=" + redirectUri
-			+ "&response_type=code";
-	}
 
 	public String getToken(String code) {
 		RestTemplate rt = new RestTemplate();
