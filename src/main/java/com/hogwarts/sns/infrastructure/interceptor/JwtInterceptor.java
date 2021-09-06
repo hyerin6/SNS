@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.hogwarts.sns.infrastructure.security.AuthService;
 import com.hogwarts.sns.infrastructure.security.JwtService;
 import com.hogwarts.sns.presentation.exception.e4xx.AuthenticationException;
 import com.hogwarts.sns.utils.HeaderUtil;
@@ -19,9 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Component
 public class JwtInterceptor extends HandlerInterceptorAdapter {
-
-	private final AuthService authService;
-
+	
 	private final JwtService jwtService;
 
 	@SneakyThrows
@@ -32,7 +29,7 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
 		jwtService.verifyAccessToken(accessToken);
 		String uid = jwtService.decode(accessToken);
 
-		if (!authService.hasRefreshToken(uid)) {
+		if (!jwtService.hasRefreshToken(uid)) {
 			throw new AuthenticationException();
 		}
 

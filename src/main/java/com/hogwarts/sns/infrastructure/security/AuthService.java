@@ -45,16 +45,6 @@ public class AuthService {
 		return accessToken;
 	}
 
-	public boolean hasRefreshToken(String uid) {
-		if (!redisTemplate.hasKey(uid)) {
-			return false;
-		}
-
-		String refreshToken = redisTemplate.opsForValue().get(uid);
-		jwtService.verifyRefreshToken(refreshToken);
-		return true;
-	}
-
 	public void invalidate(String uid) {
 		if (redisTemplate.hasKey(uid)) {
 			redisTemplate.delete(uid);

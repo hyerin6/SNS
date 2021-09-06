@@ -4,7 +4,8 @@ import java.util.Base64;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,10 +18,12 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Component
+@Service
+@RequiredArgsConstructor
 public class JwtService {
 
 	@Value("${jwt.secret}")
@@ -31,6 +34,8 @@ public class JwtService {
 	private static final Integer ACCESS_EXPIRE = 1 * 1000 * 60 * 60 * 24; // 1일
 
 	private static final Integer REFRESH_EXPIRE = 30 * 1000 * 60 * 60 * 24; // 30일
+
+	private final RedisTemplate<String, String> redisTemplate;
 
 	public String createAccessToken(String subject) {
 		Date now = new Date();
@@ -93,6 +98,16 @@ public class JwtService {
 		}
 
 		return sub;
+	}
+
+	public boolean hasRefreshToken(String uid) {
+		if (!redisTemplate.hasKey(uid)) {
+			return false;
+		}
+
+		String refreshToken = redisTemplate.opsForValue().get(uid);
+		verifyRefreshToken(refreshToken);
+		return true;
 	}
 
 	@Data

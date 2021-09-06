@@ -5,7 +5,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -18,10 +18,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-@Component
+@Service
 public class AuthApiService {
 
 	private final static String TOKEN_TYPE = "Bearer ";
+
+	private final RestTemplate restTemplate;
 
 	@Value("${spring.security.oauth2.kakao.content-type}")
 	private String contentType;
@@ -45,8 +47,6 @@ public class AuthApiService {
 	private String userInfoUri;
 
 	public String getToken(String code) {
-		RestTemplate rt = new RestTemplate();
-
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-type", contentType);
 
@@ -59,7 +59,7 @@ public class AuthApiService {
 
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
-		ResponseEntity<TokenResponse> response = rt.exchange(
+		ResponseEntity<TokenResponse> response = restTemplate.exchange(
 			tokenUri,
 			HttpMethod.POST,
 			request,
@@ -70,15 +70,13 @@ public class AuthApiService {
 	}
 
 	public KakaoProfile getProfile(String accessToken) {
-		RestTemplate rt = new RestTemplate();
-
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-type", contentType);
 		headers.add("Authorization", TOKEN_TYPE + accessToken);
 
 		HttpEntity<String> request = new HttpEntity<>(headers);
 
-		ResponseEntity<KakaoProfile> response = rt.exchange(
+		ResponseEntity<KakaoProfile> response = restTemplate.exchange(
 			userInfoUri,
 			HttpMethod.GET,
 			request,
