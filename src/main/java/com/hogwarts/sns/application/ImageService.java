@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.hogwarts.sns.domain.Image;
 import com.hogwarts.sns.domain.Post;
-import com.hogwarts.sns.persistence.ImageRepository;
+import com.hogwarts.sns.infrastructure.persistence.ImageRepository;
 import com.hogwarts.sns.presentation.response.FileInfo;
 
 import lombok.RequiredArgsConstructor;

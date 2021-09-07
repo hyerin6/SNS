@@ -1,9 +1,9 @@
-package com.hogwarts.sns.exception.e4xx;
+package com.hogwarts.sns.presentation.exception.e4xx;
 
 import org.springframework.http.HttpStatus;
 
-import com.hogwarts.sns.exception.ResponseDefinition;
-import com.hogwarts.sns.exception.ResponseException;
+import com.hogwarts.sns.presentation.exception.ResponseDefinition;
+import com.hogwarts.sns.presentation.exception.ResponseException;
 
 public enum NotFoundException implements ResponseDefinition {
 	POST(HttpStatus.BAD_REQUEST, NotFoundException.NOT_FOUND_CODE, "해당 게시글이 존재하지 않습니다."),

@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hogwarts.sns.domain.Follow;
 import com.hogwarts.sns.domain.User;
-import com.hogwarts.sns.persistence.FollowRepository;
+import com.hogwarts.sns.infrastructure.persistence.FollowRepository;
 import com.hogwarts.sns.presentation.response.UsersResponse;
 
 import lombok.RequiredArgsConstructor;

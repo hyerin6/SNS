@@ -1,4 +1,4 @@
-package com.hogwarts.sns.exception;
+package com.hogwarts.sns.presentation.exception;
 
 import org.springframework.http.HttpStatus;
 
