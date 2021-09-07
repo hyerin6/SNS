@@ -42,11 +42,11 @@ public class AuthorizeController {
 		if (user == null) {
 			accessToken = authService.signUp(kakaoProfile);
 		} else {
-			accessToken = authService.signIn(user.getUid());
+			accessToken = authService.signIn(user.getUserId());
 		}
 
 		ModelAndView modelAndView = new ModelAndView("/user");
-		modelAndView.addObject("uid", kakaoProfile.getId())
+		modelAndView.addObject("userId", kakaoProfile.getId())
 			.addObject("email", kakaoProfile.getKakaoAccount().getEmail())
 			.addObject("name", kakaoProfile.getKakaoAccount().getProfile().getNickname())
 			.addObject("profile", kakaoProfile.getKakaoAccount().getProfile().getProfileImageUrl())

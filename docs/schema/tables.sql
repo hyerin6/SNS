@@ -3,7 +3,7 @@ CREATE DATABASE sns DEFAULT CHARACTER SET utf8;
 CREATE TABLE `user`
 (
     id         bigint      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    uid        varchar(30) NOT NULL,
+    user_id    varchar(30) NOT NULL,
     email      varchar(50),
     name       varchar(30),
     profile    varchar(100),

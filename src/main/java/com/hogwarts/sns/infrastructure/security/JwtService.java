@@ -65,8 +65,8 @@ public class JwtService {
 				.setSigningKey(SECRET_KEY)
 				.parseClaimsJws(token);
 		} catch (ExpiredJwtException e) {
-			String uid = decode(token);
-			throw new ExpiredAccessTokenException(e, uid);
+			String sub = decode(token);
+			throw new ExpiredAccessTokenException(e, sub);
 		} catch (JwtException | IllegalArgumentException e) {
 			new AuthenticationException(e);
 		}
@@ -78,8 +78,8 @@ public class JwtService {
 				.setSigningKey(SECRET_KEY)
 				.parseClaimsJws(token);
 		} catch (ExpiredJwtException e) {
-			String uid = decode(token);
-			throw new ExpiredRefreshTokenException(e, uid);
+			String sub = decode(token);
+			throw new ExpiredRefreshTokenException(e, sub);
 		} catch (JwtException | IllegalArgumentException e) {
 			new AuthenticationException(e);
 		}
@@ -100,12 +100,12 @@ public class JwtService {
 		return sub;
 	}
 
-	public boolean hasRefreshToken(String uid) {
-		if (!redisTemplate.hasKey(uid)) {
+	public boolean hasRefreshToken(String key) {
+		if (!redisTemplate.hasKey(key)) {
 			return false;
 		}
 
-		String refreshToken = redisTemplate.opsForValue().get(uid);
+		String refreshToken = redisTemplate.opsForValue().get(key);
 		verifyRefreshToken(refreshToken);
 		return true;
 	}

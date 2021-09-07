@@ -43,21 +43,21 @@ public class ExceptionControllerAdvice {
 
 	@ExceptionHandler(ExpiredAccessTokenException.class)
 	public ModelAndView expiredAccessTokenException(ExpiredAccessTokenException e) {
-		String uid = e.getUid();
+		String userId = e.getSub();
 
-		if (!redisTemplate.hasKey(uid)) {
+		if (!redisTemplate.hasKey(userId)) {
 			return new ModelAndView("/index");
 		}
 
-		String refreshToken = redisTemplate.opsForValue().get(uid);
+		String refreshToken = redisTemplate.opsForValue().get(userId);
 		jwtService.verifyRefreshToken(refreshToken);
-		String accessToken = jwtService.createAccessToken(uid);
+		String accessToken = jwtService.createAccessToken(userId);
 		return new ModelAndView("/login", "accessToken", accessToken);
 	}
 
 	@ExceptionHandler(ExpiredRefreshTokenException.class)
 	public ModelAndView expiredRefreshTokenException(ExpiredRefreshTokenException e) {
-		authService.invalidate(e.getUid());
+		authService.invalidate(e.getSub());
 		return new ModelAndView("/index");
 	}
 

@@ -5,14 +5,14 @@ import lombok.Getter;
 @Getter
 public class ExpiredRefreshTokenException extends RuntimeException {
 
-	private String uid;
+	private String sub;
 
 	public ExpiredRefreshTokenException() {
 	}
 
-	public ExpiredRefreshTokenException(Throwable t, String uid) {
+	public ExpiredRefreshTokenException(Throwable t, String sub) {
 		super(t);
-		this.uid = uid;
+		this.sub = sub;
 	}
 
 	public ExpiredRefreshTokenException(String msg, Throwable cause) {

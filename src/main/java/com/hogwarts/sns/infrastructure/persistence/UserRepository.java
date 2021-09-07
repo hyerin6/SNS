@@ -9,5 +9,5 @@ import com.hogwarts.sns.domain.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-	Optional<User> findByUid(String uid);
+	Optional<User> findByUserId(String userId);
 }

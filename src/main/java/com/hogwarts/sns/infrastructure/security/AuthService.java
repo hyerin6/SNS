@@ -25,7 +25,7 @@ public class AuthService {
 
 	public String signUp(KakaoProfile kakaoProfile) {
 		User user = User.builder()
-			.uid(kakaoProfile.getId())
+			.userId(kakaoProfile.getId())
 			.email(kakaoProfile.getKakaoAccount().getEmail())
 			.name(kakaoProfile.getKakaoAccount().getProfile().getNickname())
 			.profile(kakaoProfile.getKakaoAccount().getProfile().getProfileImageUrl())
@@ -33,21 +33,21 @@ public class AuthService {
 
 		userService.createUser(user);
 
-		return signIn(user.getUid());
+		return signIn(user.getUserId());
 	}
 
-	public String signIn(String uid) {
-		invalidate(uid);
-		String accessToken = jwtService.createAccessToken(uid);
-		String refreshToken = jwtService.createRefreshToken(uid);
-		redisTemplate.opsForValue().set(uid, refreshToken);
-		redisTemplate.expire(uid, 30, TimeUnit.DAYS);
+	public String signIn(String userId) {
+		invalidate(userId);
+		String accessToken = jwtService.createAccessToken(userId);
+		String refreshToken = jwtService.createRefreshToken(userId);
+		redisTemplate.opsForValue().set(userId, refreshToken);
+		redisTemplate.expire(userId, 30, TimeUnit.DAYS);
 		return accessToken;
 	}
 
-	public void invalidate(String uid) {
-		if (redisTemplate.hasKey(uid)) {
-			redisTemplate.delete(uid);
+	public void invalidate(String userId) {
+		if (redisTemplate.hasKey(userId)) {
+			redisTemplate.delete(userId);
 		}
 	}
 

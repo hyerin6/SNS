@@ -26,8 +26,8 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
-	public User getUser(String uid) {
-		return userRepository.findByUid(uid).orElse(null);
+	public User getUser(String userId) {
+		return userRepository.findByUserId(userId).orElse(null);
 	}
 
 }

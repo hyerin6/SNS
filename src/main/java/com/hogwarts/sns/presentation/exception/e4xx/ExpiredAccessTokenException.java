@@ -5,14 +5,14 @@ import lombok.Getter;
 @Getter
 public class ExpiredAccessTokenException extends RuntimeException {
 
-	private String uid;
+	private String sub;
 
 	public ExpiredAccessTokenException() {
 	}
 
-	public ExpiredAccessTokenException(Throwable t, String uid) {
+	public ExpiredAccessTokenException(Throwable t, String sub) {
 		super(t);
-		this.uid = uid;
+		this.sub = sub;
 	}
 
 	public ExpiredAccessTokenException(String msg, Throwable cause) {
