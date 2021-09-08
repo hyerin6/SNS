@@ -6,7 +6,6 @@ import java.util.List;
 import com.hogwarts.sns.domain.Image;
 import com.hogwarts.sns.domain.Post;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 public class PostResponse implements Serializable {
 	private Post post;
 	private List<Image> images;

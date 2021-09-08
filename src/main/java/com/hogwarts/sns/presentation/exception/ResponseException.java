@@ -19,6 +19,7 @@ public class ResponseException extends Exception {
 	private String message;
 
 	private ResponseException(ResponseException responseException) {
+		this.status = responseException.status;
 		this.code = responseException.code;
 		this.message = responseException.message;
 	}

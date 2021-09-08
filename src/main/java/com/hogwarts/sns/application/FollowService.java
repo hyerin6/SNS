@@ -3,13 +3,16 @@ package com.hogwarts.sns.application;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hogwarts.sns.domain.Follow;
 import com.hogwarts.sns.domain.User;
 import com.hogwarts.sns.infrastructure.persistence.FollowRepository;
-import com.hogwarts.sns.presentation.response.UsersResponse;
+import com.hogwarts.sns.presentation.response.UserResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,15 +39,23 @@ public class FollowService {
 	}
 
 	@Transactional(readOnly = true)
-	public UsersResponse getFollowers(Long userId) {
-		List<Follow> followers = followRepository.findByFollowing(userId);
-		return new UsersResponse(followers.stream().map(Follow::getFollower).collect(Collectors.toList()));
-	}
+	public Page<UserResponse> getFollowers(Long userId, Pageable pageable) {
+		Page<Follow> followers = followRepository.findByFollowing(userId, pageable);
 
+		List<UserResponse> userResponses = followers.getContent().stream()
+			.map(Follow::getFollower).map(UserResponse::new).collect(Collectors.toList());
+
+		return new PageImpl<>(userResponses, pageable, followers.getTotalElements());
+	}
+	
 	@Transactional(readOnly = true)
-	public UsersResponse getFollowings(Long userId) {
-		List<Follow> followings = followRepository.findByFollower(userId);
-		return new UsersResponse(followings.stream().map(Follow::getFollowing).collect(Collectors.toList()));
+	public Page<UserResponse> getFollowings(Long userId, Pageable pageable) {
+		Page<Follow> followings = followRepository.findByFollower(userId, pageable);
+
+		List<UserResponse> userResponses = followings.getContent().stream()
+			.map(Follow::getFollowing).map(UserResponse::new).collect(Collectors.toList());
+
+		return new PageImpl<>(userResponses, pageable, followings.getTotalElements());
 	}
 
 }

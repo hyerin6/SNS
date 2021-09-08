@@ -1,7 +1,11 @@
 package com.hogwarts.sns.application;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +52,26 @@ public class PostService {
 			.post(post)
 			.images(images)
 			.build();
+	}
+
+	@Transactional(readOnly = true)
+	public Page<PostResponse> getPosts(Long userId, Pageable pageable) {
+		Page<Post> posts = postRepository.findByUserId(userId, pageable);
+
+		List<PostResponse> postResponses = new ArrayList<>();
+
+		for (Post post : posts) {
+			List<Image> images = imageService.getImage(post.getId());
+			PostResponse response = new PostResponse(post, images);
+			postResponses.add(response);
+		}
+
+		return new PageImpl<>(postResponses, pageable, posts.getTotalElements());
+	}
+
+	@Transactional(readOnly = true)
+	public Page<PostResponse> getFeed(Long userId, Pageable pageable) {
+		return null;
 	}
 
 	@Transactional

@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hogwarts.sns.application.CommentService;
 import com.hogwarts.sns.application.PostService;
-import com.hogwarts.sns.application.UserService;
 import com.hogwarts.sns.domain.Post;
 import com.hogwarts.sns.domain.User;
+import com.hogwarts.sns.infrastructure.security.UserContext;
 import com.hogwarts.sns.presentation.exception.ResponseException;
 import com.hogwarts.sns.presentation.request.CreateCommentRequest;
 import com.hogwarts.sns.presentation.response.CommentsResponse;
@@ -29,11 +29,10 @@ public class CommentController {
 
 	private final CommentService commentService;
 	private final PostService postService;
-	private final UserService userService;
 
 	@PostMapping("/comment")
 	public ResponseEntity<Void> create(@RequestBody CreateCommentRequest request) throws ResponseException {
-		User user = userService.getUser(1L); // User CRUD 구현 후 수정
+		User user = UserContext.getCurrentUser();
 		Post post = postService.getPost(request.getPostId()).getPost();
 		commentService.create(user, post, request);
 		return CREATED;

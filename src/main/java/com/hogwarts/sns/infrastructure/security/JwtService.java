@@ -8,6 +8,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hogwarts.sns.presentation.exception.e4xx.AuthenticationException;
 import com.hogwarts.sns.presentation.exception.e4xx.ExpiredAccessTokenException;
@@ -33,7 +34,7 @@ public class JwtService {
 
 	private static final Integer ACCESS_EXPIRE = 1 * 1000 * 60 * 60 * 24; // 1일
 
-	private static final Integer REFRESH_EXPIRE = 30 * 1000 * 60 * 60 * 24; // 30일
+	private static final Integer REFRESH_EXPIRE = 15 * 1000 * 60 * 60 * 24; // 15일
 
 	private final RedisTemplate<String, String> redisTemplate;
 
@@ -93,7 +94,7 @@ public class JwtService {
 			String payload = new String(Base64.getDecoder().decode(chunks[1]));
 			ObjectMapper mapper = new ObjectMapper();
 			sub = mapper.readValue(payload, Payload.class).getSub();
-		} catch (Exception e) {
+		} catch (JsonProcessingException e) {
 			throw new AuthenticationException(e);
 		}
 
