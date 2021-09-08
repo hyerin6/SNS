@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    include:
+      - aws
+      - security
+      - database
+  thymeleaf:
+    cache: false
+  servlet:
+    multipart:
+      max-file-size: -1 # default 1MB
+      max-request-size: -1 # default 10MB
