@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hogwarts.sns.application.UserService;
 import com.hogwarts.sns.domain.User;
-import com.hogwarts.sns.infrastructure.security.UserContext;
+import com.hogwarts.sns.infrastructure.security.Authenticationprincipal;
 import com.hogwarts.sns.presentation.exception.ResponseException;
 import com.hogwarts.sns.presentation.response.UserResponse;
 
@@ -24,8 +24,8 @@ public class UserController {
 	private final UserService userService;
 
 	@GetMapping("/myInfo")
-	public ResponseEntity<UserResponse> getMyInfo() {
-		User user = UserContext.getCurrentUser();
+	public ResponseEntity<UserResponse> getMyInfo(@Authenticationprincipal String userId) {
+		User user = userService.getUser(userId);
 		return ResponseEntity.ok(new UserResponse(user));
 	}
 

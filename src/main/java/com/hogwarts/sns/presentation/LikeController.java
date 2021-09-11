@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hogwarts.sns.application.LikeService;
+import com.hogwarts.sns.application.UserService;
 import com.hogwarts.sns.domain.User;
-import com.hogwarts.sns.infrastructure.security.UserContext;
+import com.hogwarts.sns.infrastructure.security.Authenticationprincipal;
 import com.hogwarts.sns.presentation.request.LikeRequest;
 
 import lombok.RequiredArgsConstructor;
@@ -23,15 +24,16 @@ import lombok.RequiredArgsConstructor;
 public class LikeController {
 
 	private final LikeService likeService;
+	private final UserService userService;
 
-	@PostMapping("like")
-	public ResponseEntity<Void> like(@RequestBody LikeRequest request) {
-		User user = UserContext.getCurrentUser();
+	@PostMapping("/like")
+	public ResponseEntity<Void> like(@Authenticationprincipal String userId, @RequestBody LikeRequest request) {
+		User user = userService.getUser(userId);
 		likeService.Like(user, request);
 		return CREATED;
 	}
 
-	@DeleteMapping("unLike/{id}")
+	@DeleteMapping("/unLike/{id}")
 	public ResponseEntity<Void> unLike(@PathVariable Long id) {
 		likeService.unLike(id);
 		return OK;
