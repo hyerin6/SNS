@@ -3,8 +3,6 @@ package com.hogwarts.sns.application;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,23 +53,33 @@ public class PostService {
 	}
 
 	@Transactional(readOnly = true)
-	public Page<PostResponse> getPosts(Long userId, Pageable pageable) {
-		Page<Post> posts = postRepository.findByUserId(userId, pageable);
+	public List<PostResponse> getPosts(Long userId, Long lastPostId, Pageable pageable) {
+		List<Post> posts;
 
-		List<PostResponse> postResponses = new ArrayList<>();
-
-		for (Post post : posts) {
-			List<Image> images = imageService.getImage(post.getId());
-			PostResponse response = new PostResponse(post, images);
-			postResponses.add(response);
+		if (lastPostId > Long.MIN_VALUE) {
+			posts = postRepository.findByUserIdAndIdLessThan(userId, lastPostId, pageable);
+		} else {
+			posts = postRepository.findByUserId(userId, pageable);
 		}
 
-		return new PageImpl<>(postResponses, pageable, posts.getTotalElements());
+		List<PostResponse> postResponses = getImages(posts);
+
+		return postResponses;
 	}
 
 	@Transactional(readOnly = true)
-	public Page<PostResponse> getFeed(Long userId, Pageable pageable) {
-		return null;
+	public List<PostResponse> getFeed(Long userId, Long lastPostId, Pageable pageable) {
+		List<Post> posts;
+
+		if (lastPostId > Long.MIN_VALUE) {
+			posts = postRepository.findByLastIdAndJoinFollow(userId, lastPostId, pageable);
+		} else {
+			posts = postRepository.findByJoinFollow(userId, pageable);
+		}
+
+		List<PostResponse> postResponses = getImages(posts);
+
+		return postResponses;
 	}
 
 	@Transactional
@@ -86,6 +94,18 @@ public class PostService {
 	public void deletePost(Long id) {
 		imageService.delete(id);
 		postRepository.deleteById(id);
+	}
+
+	private List<PostResponse> getImages(List<Post> posts) {
+		List<PostResponse> postResponses = new ArrayList<>();
+
+		for (Post post : posts) {
+			List<Image> images = imageService.getImage(post.getId());
+			PostResponse response = new PostResponse(post, images);
+			postResponses.add(response);
+		}
+
+		return postResponses;
 	}
 
 }

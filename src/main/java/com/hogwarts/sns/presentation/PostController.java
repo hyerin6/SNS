@@ -2,8 +2,10 @@ package com.hogwarts.sns.presentation;
 
 import static com.hogwarts.sns.presentation.response.ResponseEntityConstants.*;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import java.util.List;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,11 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hogwarts.sns.application.PostService;
+import com.hogwarts.sns.application.UserService;
 import com.hogwarts.sns.domain.User;
-import com.hogwarts.sns.infrastructure.security.UserContext;
+import com.hogwarts.sns.infrastructure.security.Authenticationprincipal;
 import com.hogwarts.sns.presentation.exception.ResponseException;
 import com.hogwarts.sns.presentation.request.CreatePostRequest;
 import com.hogwarts.sns.presentation.request.ModifyPostRequest;
+import com.hogwarts.sns.presentation.request.PostsRequest;
 import com.hogwarts.sns.presentation.response.PostResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -30,11 +34,17 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api")
 public class PostController {
 
+	private static final int PAGE = 0;
+	private static final int SIZE = 5;
+	private static final String SORT_PROPERTY = "id";
+
 	private final PostService postService;
+	private final UserService userService;
 
 	@PostMapping("/post")
-	public ResponseEntity<Void> create(@ModelAttribute CreatePostRequest request) {
-		User user = UserContext.getCurrentUser();
+	public ResponseEntity<Void> create(@Authenticationprincipal String userId,
+		@ModelAttribute CreatePostRequest request) {
+		User user = userService.getUser(userId);
 		postService.addPost(user, request);
 		return CREATED;
 	}
@@ -57,21 +67,27 @@ public class PostController {
 		return OK;
 	}
 
-	@GetMapping("/posts")
-	public ResponseEntity<Page<PostResponse>> getMyPosts(Pageable pageable) {
-		User user = UserContext.getCurrentUser();
-		return ResponseEntity.ok(postService.getPosts(user.getId(), pageable));
+	@PostMapping("/posts")
+	public ResponseEntity<List<PostResponse>> getMyPosts(@Authenticationprincipal String userId,
+		@RequestBody PostsRequest request) {
+		User user = userService.getUser(userId);
+		PageRequest pageRequest = PageRequest.of(PAGE, SIZE, Sort.by(SORT_PROPERTY));
+		return ResponseEntity.ok(postService.getPosts(user.getId(), request.getLastPostId(), pageRequest));
 	}
 
-	@GetMapping("/posts/{userId}")
-	public ResponseEntity<Page<PostResponse>> getPosts(@PathVariable("userId") Long userId, Pageable pageable) {
-		return ResponseEntity.ok(postService.getPosts(userId, pageable));
+	@PostMapping("/posts/{userId}")
+	public ResponseEntity<List<PostResponse>> getPosts(@PathVariable("userId") Long userId,
+		@RequestBody PostsRequest request) {
+		PageRequest pageRequest = PageRequest.of(PAGE, SIZE, Sort.by(SORT_PROPERTY));
+		return ResponseEntity.ok(postService.getPosts(userId, request.getLastPostId(), pageRequest));
 	}
 
-	@GetMapping("/feed")
-	public ResponseEntity<Page<PostResponse>> getFeed(Pageable pageable) {
-		User user = UserContext.getCurrentUser();
-		return ResponseEntity.ok(postService.getFeed(user.getId(), pageable));
+	@PostMapping("/feed")
+	public ResponseEntity<List<PostResponse>> getFeed(@Authenticationprincipal String userId,
+		@RequestBody PostsRequest request) {
+		User user = userService.getUser(userId);
+		PageRequest pageRequest = PageRequest.of(PAGE, SIZE, Sort.by(SORT_PROPERTY));
+		return ResponseEntity.ok(postService.getFeed(user.getId(), request.getLastPostId(), pageRequest));
 	}
 
 }

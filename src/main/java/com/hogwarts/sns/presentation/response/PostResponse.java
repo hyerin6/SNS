@@ -19,4 +19,3 @@ public class PostResponse implements Serializable {
 	private Post post;
 	private List<Image> images;
 }
-
