@@ -13,7 +13,7 @@ import com.hogwarts.sns.domain.Post;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-	List<Post> findByUserId(@Param("userId") Long userId, Pageable Pageable);
+	List<Post> findByUserId(Long userId, Pageable Pageable);
 
 	List<Post> findByUserIdAndIdLessThan(@Param("userId") Long userId, @Param("id") Long lastPostId, Pageable Pageable);
 
@@ -22,7 +22,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 		+ " JOIN follow f ON p.user_id = f.follower_id"
 		+ " WHERE p.user_id = :userId"
 		+ " AND  f.follower_id = :userId", nativeQuery = true)
-	List<Post> findByJoinFollow(@Param("userId") Long userId, Pageable pageable);
+	List<Post> findByJoinFollow(Long userId, Pageable pageable);
 
 	@Query(value = "SELECT *"
 		+ " FROM post p"
@@ -30,6 +30,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 		+ " WHERE p.user_id = :userId"
 		+ " AND  f.follower_id = :userId"
 		+ " AND p.id < :lastPostId", nativeQuery = true)
-	List<Post> findByLastIdAndJoinFollow(@Param("userId") Long userId, @Param("lastPostId") Long lastPostId,
-		Pageable pageable);
+	List<Post> findByLastIdAndJoinFollow(Long userId, Long lastPostId, Pageable pageable);
 }

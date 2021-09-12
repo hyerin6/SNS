@@ -9,11 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hogwarts.sns.domain.Image;
 import com.hogwarts.sns.domain.Post;
+import com.hogwarts.sns.domain.Type;
 import com.hogwarts.sns.domain.User;
 import com.hogwarts.sns.infrastructure.persistence.PostRepository;
 import com.hogwarts.sns.presentation.exception.ResponseException;
 import com.hogwarts.sns.presentation.exception.e4xx.NotFoundException;
 import com.hogwarts.sns.presentation.request.CreatePostRequest;
+import com.hogwarts.sns.presentation.request.LikeRequest;
 import com.hogwarts.sns.presentation.request.ModifyPostRequest;
 import com.hogwarts.sns.presentation.response.PostResponse;
 
@@ -27,6 +29,7 @@ public class PostService {
 
 	private final PostRepository postRepository;
 	private final ImageService imageService;
+	private final LikeService likeService;
 
 	@Transactional
 	public void addPost(User user, CreatePostRequest request) {
@@ -36,7 +39,7 @@ public class PostService {
 			.build();
 
 		postRepository.save(post);
-		imageService.addImage(post, request.getImages());
+		imageService.createImage(post, request.getImages());
 	}
 
 	@Transactional(readOnly = true)
@@ -56,32 +59,42 @@ public class PostService {
 	public List<PostResponse> getPosts(Long userId, Long lastPostId, Pageable pageable) {
 		List<Post> posts;
 
-		if (lastPostId > Long.MIN_VALUE) {
+		if (lastPostId > 0) {
 			posts = postRepository.findByUserIdAndIdLessThan(userId, lastPostId, pageable);
 		} else {
 			posts = postRepository.findByUserId(userId, pageable);
 		}
 
-		List<PostResponse> postResponses = getImages(posts);
-
-		return postResponses;
+		return getPostResponses(posts);
 	}
 
 	@Transactional(readOnly = true)
 	public List<PostResponse> getFeed(Long userId, Long lastPostId, Pageable pageable) {
 		List<Post> posts;
 
-		if (lastPostId > Long.MIN_VALUE) {
+		if (lastPostId > 0) {
 			posts = postRepository.findByLastIdAndJoinFollow(userId, lastPostId, pageable);
 		} else {
 			posts = postRepository.findByJoinFollow(userId, pageable);
 		}
 
-		List<PostResponse> postResponses = getImages(posts);
+		return getPostResponses(posts);
+	}
+
+	private List<PostResponse> getPostResponses(List<Post> posts) {
+		List<PostResponse> postResponses = new ArrayList<>();
+
+		for (Post post : posts) {
+			List<Image> images = imageService.getImage(post.getId());
+			LikeRequest likeRequest = new LikeRequest(Type.POST, post.getId());
+			int likeCnt = likeService.getLikeCnt(likeRequest);
+			PostResponse response = new PostResponse(post, images, likeCnt);
+			postResponses.add(response);
+		}
 
 		return postResponses;
 	}
-
+	
 	@Transactional
 	public void modifyPost(Long id, ModifyPostRequest request) throws ResponseException {
 		Post post = postRepository.findById(id)
@@ -94,18 +107,6 @@ public class PostService {
 	public void deletePost(Long id) {
 		imageService.delete(id);
 		postRepository.deleteById(id);
-	}
-
-	private List<PostResponse> getImages(List<Post> posts) {
-		List<PostResponse> postResponses = new ArrayList<>();
-
-		for (Post post : posts) {
-			List<Image> images = imageService.getImage(post.getId());
-			PostResponse response = new PostResponse(post, images);
-			postResponses.add(response);
-		}
-
-		return postResponses;
 	}
 
 }

@@ -1,6 +1,5 @@
 package com.hogwarts.sns.presentation.response;
 
-import java.io.Serializable;
 import java.util.List;
 
 import com.hogwarts.sns.domain.Image;
@@ -15,7 +14,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostResponse implements Serializable {
+public class PostResponse {
 	private Post post;
 	private List<Image> images;
+	private int likeCnt;
 }

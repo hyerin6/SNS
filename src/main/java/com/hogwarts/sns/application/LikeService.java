@@ -1,8 +1,7 @@
 package com.hogwarts.sns.application;
 
-import javax.transaction.Transactional;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hogwarts.sns.domain.Like;
 import com.hogwarts.sns.domain.User;
@@ -33,4 +32,8 @@ public class LikeService {
 		likeRepository.deleteById(id);
 	}
 
+	@Transactional(readOnly = true)
+	public int getLikeCnt(LikeRequest likeRequest) {
+		return likeRepository.countByTypeAndParentId(likeRequest.getType().toDbValue(), likeRequest.getParentId());
+	}
 }

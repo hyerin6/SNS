@@ -1,14 +1,10 @@
 package com.hogwarts.sns.presentation.request;
 
-public class PostsRequest {
-	
-	private Long lastPostId;
+import lombok.Getter;
 
-	public Long getLastPostId() {
-		if (this.lastPostId == null) {
-			return Long.MIN_VALUE;
-		}
-		return this.lastPostId;
-	}
+@Getter
+public class PostsRequest {
+
+	private Long lastPostId;
 
 }
