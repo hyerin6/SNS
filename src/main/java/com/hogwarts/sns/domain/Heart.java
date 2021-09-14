@@ -29,12 +29,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-public class Like {
+public class Heart {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Convert(converter = LikeTypeConverter.class)
+	@Convert(converter = HeartTypeConverter.class)
 	private Type type;
 
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -70,7 +70,7 @@ CREATE TABLE image
 CREATE INDEX fk_image_post ON image (post_id);
 
 
-CREATE TABLE `like`
+CREATE TABLE `heart`
 (
     id         bigint   NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_id    bigint   NOT NULL,
@@ -78,7 +78,7 @@ CREATE TABLE `like`
     created_at datetime NOT NULL,
     updated_at datetime,
     `type`     int      NOT NULL,
-    CONSTRAINT fk_like_user FOREIGN KEY (user_id) REFERENCES `user` (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+    CONSTRAINT fk_heart_user FOREIGN KEY (user_id) REFERENCES `user` (id) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
-CREATE INDEX fk_like_user ON `like` (user_id);
+CREATE INDEX fk_heart_user ON `heart` (user_id);

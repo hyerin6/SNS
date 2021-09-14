@@ -19,7 +19,7 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
 
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
-		return parameter.getParameterAnnotation(Authenticationprincipal.class) != null;
+		return parameter.getParameterAnnotation(AuthenticationPrincipal.class) != null;
 	}
 
 	@Override

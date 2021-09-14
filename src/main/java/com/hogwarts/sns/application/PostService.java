@@ -1,23 +1,18 @@
 package com.hogwarts.sns.application;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hogwarts.sns.domain.Image;
 import com.hogwarts.sns.domain.Post;
-import com.hogwarts.sns.domain.Type;
 import com.hogwarts.sns.domain.User;
 import com.hogwarts.sns.infrastructure.persistence.PostRepository;
 import com.hogwarts.sns.presentation.exception.ResponseException;
 import com.hogwarts.sns.presentation.exception.e4xx.NotFoundException;
 import com.hogwarts.sns.presentation.request.CreatePostRequest;
-import com.hogwarts.sns.presentation.request.LikeRequest;
 import com.hogwarts.sns.presentation.request.ModifyPostRequest;
-import com.hogwarts.sns.presentation.response.PostResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,74 +24,45 @@ public class PostService {
 
 	private final PostRepository postRepository;
 	private final ImageService imageService;
-	private final LikeService likeService;
 
 	@Transactional
-	public void addPost(User user, CreatePostRequest request) {
+	public void create(User user, CreatePostRequest request) {
 		Post post = Post.builder()
 			.user(user)
 			.content(request.getContent())
 			.build();
 
 		postRepository.save(post);
-		imageService.createImage(post, request.getImages());
+		imageService.create(post, request.getImages());
 	}
 
 	@Transactional(readOnly = true)
-	public PostResponse getPost(Long id) throws ResponseException {
-		Post post = postRepository.findById(id)
+	public Post getPost(Long id) throws ResponseException {
+		return postRepository.findById(id)
 			.orElseThrow(NotFoundException.POST);
-
-		List<Image> images = imageService.getImage(id);
-
-		return PostResponse.builder()
-			.post(post)
-			.images(images)
-			.build();
 	}
 
 	@Transactional(readOnly = true)
-	public List<PostResponse> getPosts(Long userId, Long lastPostId, Pageable pageable) {
-		List<Post> posts;
-
+	public List<Post> getPosts(Long userId, Long lastPostId, Pageable pageable) {
 		if (lastPostId > 0) {
-			posts = postRepository.findByUserIdAndIdLessThan(userId, lastPostId, pageable);
-		} else {
-			posts = postRepository.findByUserId(userId, pageable);
+			return postRepository.findByUserIdAndIdLessThan(userId, lastPostId, pageable);
 		}
 
-		return getPostResponses(posts);
+		return postRepository.findByUserId(userId, pageable);
+
 	}
 
 	@Transactional(readOnly = true)
-	public List<PostResponse> getFeed(Long userId, Long lastPostId, Pageable pageable) {
-		List<Post> posts;
-
+	public List<Post> getFeed(Long userId, Long lastPostId, Pageable pageable) {
 		if (lastPostId > 0) {
-			posts = postRepository.findByLastIdAndJoinFollow(userId, lastPostId, pageable);
-		} else {
-			posts = postRepository.findByJoinFollow(userId, pageable);
+			return postRepository.findByJoinFollowAndLastIdLessThan(userId, lastPostId, pageable);
 		}
 
-		return getPostResponses(posts);
+		return postRepository.findByJoinFollow(userId, pageable);
 	}
 
-	private List<PostResponse> getPostResponses(List<Post> posts) {
-		List<PostResponse> postResponses = new ArrayList<>();
-
-		for (Post post : posts) {
-			List<Image> images = imageService.getImage(post.getId());
-			LikeRequest likeRequest = new LikeRequest(Type.POST, post.getId());
-			int likeCnt = likeService.getLikeCnt(likeRequest);
-			PostResponse response = new PostResponse(post, images, likeCnt);
-			postResponses.add(response);
-		}
-
-		return postResponses;
-	}
-	
 	@Transactional
-	public void modifyPost(Long id, ModifyPostRequest request) throws ResponseException {
+	public void modify(Long id, ModifyPostRequest request) throws ResponseException {
 		Post post = postRepository.findById(id)
 			.orElseThrow(NotFoundException.POST);
 
@@ -104,7 +70,7 @@ public class PostService {
 	}
 
 	@Transactional
-	public void deletePost(Long id) {
+	public void delete(Long id) {
 		imageService.delete(id);
 		postRepository.deleteById(id);
 	}

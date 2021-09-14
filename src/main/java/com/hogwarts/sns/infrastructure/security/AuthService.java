@@ -31,7 +31,7 @@ public class AuthService {
 			.profile(kakaoProfile.getKakaoAccount().getProfile().getProfileImageUrl())
 			.build();
 
-		userService.createUser(user);
+		userService.create(user);
 
 		return signIn(user.getUserId());
 	}

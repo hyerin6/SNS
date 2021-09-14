@@ -17,5 +17,5 @@ import lombok.NoArgsConstructor;
 public class PostResponse {
 	private Post post;
 	private List<Image> images;
-	private int likeCnt;
+	private int heartCnt;
 }

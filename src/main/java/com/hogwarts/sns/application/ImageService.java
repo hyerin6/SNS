@@ -22,7 +22,7 @@ public class ImageService {
 	private final FileService fileService;
 
 	@Transactional
-	public void createImage(Post post, List<MultipartFile> files) {
+	public void create(Post post, List<MultipartFile> files) {
 		List<FileInfo> fileInfos = fileService.uploadFiles(files);
 		List<Image> images = new ArrayList<>();
 

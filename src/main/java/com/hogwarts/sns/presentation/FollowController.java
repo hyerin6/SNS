@@ -3,6 +3,7 @@ package com.hogwarts.sns.presentation;
 import static com.hogwarts.sns.presentation.response.ResponseEntityConstants.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hogwarts.sns.application.FollowService;
 import com.hogwarts.sns.application.UserService;
 import com.hogwarts.sns.domain.User;
-import com.hogwarts.sns.infrastructure.security.Authenticationprincipal;
+import com.hogwarts.sns.infrastructure.security.AuthenticationPrincipal;
 import com.hogwarts.sns.presentation.exception.ResponseException;
 import com.hogwarts.sns.presentation.response.UserResponse;
 
@@ -31,7 +32,7 @@ public class FollowController {
 	private final UserService userService;
 
 	@GetMapping("/follow/{followingId}")
-	public ResponseEntity<Void> follow(@Authenticationprincipal String userId, @PathVariable Long followingId) throws
+	public ResponseEntity<Void> follow(@AuthenticationPrincipal String userId, @PathVariable Long followingId) throws
 		ResponseException {
 		User user = userService.getUser(userId);
 		User following = userService.getUser(1L);
@@ -40,7 +41,7 @@ public class FollowController {
 	}
 
 	@DeleteMapping("/follow/{followingId}")
-	public ResponseEntity<Void> unfollow(@Authenticationprincipal String userId, @PathVariable Long followingId) throws
+	public ResponseEntity<Void> unfollow(@AuthenticationPrincipal String userId, @PathVariable Long followingId) throws
 		ResponseException {
 		User follower = userService.getUser(userId);
 		User following = userService.getUser(followingId);
@@ -49,15 +50,27 @@ public class FollowController {
 	}
 
 	@GetMapping("/followers")
-	public ResponseEntity<List<UserResponse>> getFollowers(@Authenticationprincipal String userId, Pageable pageable) {
+	public ResponseEntity<List<UserResponse>> getFollowers(@AuthenticationPrincipal String userId, Pageable pageable) {
 		User user = userService.getUser(userId);
-		return ResponseEntity.ok(followService.getFollowers(user.getId(), pageable));
+
+		List<UserResponse> userResponses = followService.getFollowers(user.getId(), pageable)
+			.stream()
+			.map(UserResponse::new)
+			.collect(Collectors.toList());
+
+		return ResponseEntity.ok(userResponses);
 	}
 
 	@GetMapping("/followings")
-	public ResponseEntity<List<UserResponse>> getFollowings(@Authenticationprincipal String userId, Pageable pageable) {
+	public ResponseEntity<List<UserResponse>> getFollowings(@AuthenticationPrincipal String userId, Pageable pageable) {
 		User user = userService.getUser(userId);
-		return ResponseEntity.ok(followService.getFollowings(user.getId(), pageable));
+
+		List<UserResponse> userResponses = followService.getFollowings(user.getId(), pageable)
+			.stream()
+			.map(UserResponse::new)
+			.collect(Collectors.toList());
+		
+		return ResponseEntity.ok(userResponses);
 	}
 
 }

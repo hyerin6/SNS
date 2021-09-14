@@ -31,6 +31,6 @@ class PostRepositoryTest {
 
 	@Test
 	void findByLastIdAndJoinFollow() {
-		postRepository.findByLastIdAndJoinFollow(1L, 100L, PageRequest.of(0, 5, Sort.by("id").descending()));
+		postRepository.findByJoinFollowAndLastIdLessThan(1L, 100L, PageRequest.of(0, 5, Sort.by("id").descending()));
 	}
 }

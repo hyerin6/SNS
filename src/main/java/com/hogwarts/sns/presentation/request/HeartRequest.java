@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class LikeRequest {
+public class HeartRequest {
 	private Type type;
 	private Long parentId;
 }

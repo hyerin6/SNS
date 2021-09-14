@@ -4,7 +4,7 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 @Converter
-public class LikeTypeConverter implements AttributeConverter<Type, Integer> {
+public class HeartTypeConverter implements AttributeConverter<Type, Integer> {
 
 	@Override
 	public Integer convertToDatabaseColumn(Type attribute) {

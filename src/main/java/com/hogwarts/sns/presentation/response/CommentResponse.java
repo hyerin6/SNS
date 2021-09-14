@@ -9,5 +9,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CommentResponse {
 	private Comment comment;
-	private int likeCnt;
+	private int heartCnt;
 }

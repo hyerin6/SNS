@@ -17,18 +17,19 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 	List<Post> findByUserIdAndIdLessThan(@Param("userId") Long userId, @Param("id") Long lastPostId, Pageable Pageable);
 
-	@Query(value = "SELECT *"
-		+ " FROM post p"
-		+ " JOIN follow f ON p.user_id = f.follower_id"
-		+ " WHERE p.user_id = :userId"
-		+ " AND  f.follower_id = :userId", nativeQuery = true)
-	List<Post> findByJoinFollow(Long userId, Pageable pageable);
+	@Query(value = "SELECT p"
+		+ " FROM Post p"
+		+ " JOIN Follow f ON p.user.id = f.follower.id"
+		+ " WHERE p.user.id = :userId"
+		+ " AND  f.follower.id = :userId")
+	List<Post> findByJoinFollow(@Param("userId") Long userId, Pageable pageable);
 
-	@Query(value = "SELECT *"
-		+ " FROM post p"
-		+ " JOIN follow f ON p.user_id = f.follower_id"
-		+ " WHERE p.user_id = :userId"
-		+ " AND  f.follower_id = :userId"
-		+ " AND p.id < :lastPostId", nativeQuery = true)
-	List<Post> findByLastIdAndJoinFollow(Long userId, Long lastPostId, Pageable pageable);
+	@Query(value = "SELECT p"
+		+ " FROM Post p"
+		+ " JOIN Follow f ON p.user.id = f.follower.id"
+		+ " WHERE p.user.id = :userId"
+		+ " AND  f.follower.id = :userId"
+		+ " AND p.id < :lastPostId")
+	List<Post> findByJoinFollowAndLastIdLessThan(@Param("userId") Long userId, @Param("lastPostId") Long lastPostId,
+		Pageable pageable);
 }

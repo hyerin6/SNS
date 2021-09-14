@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.hogwarts.sns.domain.Follow;
 import com.hogwarts.sns.domain.User;
 import com.hogwarts.sns.infrastructure.persistence.FollowRepository;
-import com.hogwarts.sns.presentation.response.UserResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,23 +36,19 @@ public class FollowService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<UserResponse> getFollowers(Long userId, Pageable pageable) {
-		List<Follow> followers = followRepository.findByFollowing(userId, pageable);
-
-		List<UserResponse> userResponses = followers.stream()
-			.map(Follow::getFollower).map(UserResponse::new).collect(Collectors.toList());
-
-		return userResponses;
+	public List<User> getFollowers(Long userId, Pageable pageable) {
+		return followRepository.findByFollowing(userId, pageable)
+			.stream()
+			.map(Follow::getFollower)
+			.collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
-	public List<UserResponse> getFollowings(Long userId, Pageable pageable) {
-		List<Follow> followings = followRepository.findByFollower(userId, pageable);
-
-		List<UserResponse> userResponses = followings.stream()
-			.map(Follow::getFollowing).map(UserResponse::new).collect(Collectors.toList());
-
-		return userResponses;
+	public List<User> getFollowings(Long userId, Pageable pageable) {
+		return followRepository.findByFollower(userId, pageable)
+			.stream()
+			.map(Follow::getFollowing)
+			.collect(Collectors.toList());
 	}
 
 }
