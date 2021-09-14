@@ -90,7 +90,7 @@ public class PostController {
 	public ResponseEntity<List<PostResponse>> getMyPosts(@AuthenticationPrincipal String userId,
 		@RequestBody PostsRequest request) {
 		User user = userService.getUser(userId);
-		PageRequest pageRequest = PageRequest.of(PAGE, SIZE, Sort.by(SORT_PROPERTY));
+		PageRequest pageRequest = PageRequest.of(PAGE, SIZE, Sort.by(SORT_PROPERTY).descending());
 
 		List<Post> posts = postService.getPosts(user.getId(), request.getLastPostId(), pageRequest);
 
@@ -109,7 +109,7 @@ public class PostController {
 	@PostMapping("/posts/{userId}")
 	public ResponseEntity<List<PostResponse>> getPosts(@PathVariable("userId") Long userId,
 		@RequestBody PostsRequest request) {
-		PageRequest pageRequest = PageRequest.of(PAGE, SIZE, Sort.by(SORT_PROPERTY));
+		PageRequest pageRequest = PageRequest.of(PAGE, SIZE, Sort.by(SORT_PROPERTY).descending());
 
 		List<Post> posts = postService.getPosts(userId, request.getLastPostId(), pageRequest);
 
@@ -129,7 +129,7 @@ public class PostController {
 	public ResponseEntity<List<PostResponse>> getFeed(@AuthenticationPrincipal String userId,
 		@RequestBody PostsRequest request) {
 		User user = userService.getUser(userId);
-		PageRequest pageRequest = PageRequest.of(PAGE, SIZE, Sort.by(SORT_PROPERTY));
+		PageRequest pageRequest = PageRequest.of(PAGE, SIZE, Sort.by(SORT_PROPERTY).descending());
 
 		List<Post> posts = postService.getFeed(user.getId(), request.getLastPostId(), pageRequest);
 

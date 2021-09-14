@@ -16,21 +16,21 @@ class PostRepositoryTest {
 
 	@Test
 	void findByUserId() {
-		postRepository.findByUserId(1L, PageRequest.of(0, 5, Sort.by("id").descending()));
+		postRepository.findByUserId(5L, PageRequest.of(0, 5, Sort.by("id").descending()));
 	}
 
 	@Test
 	void findByUserIdAndIdLessThan() {
-		postRepository.findByUserIdAndIdLessThan(1L, 100L, PageRequest.of(0, 5, Sort.by("id").descending()));
+		postRepository.findByUserIdAndIdLessThan(5L, 100L, PageRequest.of(0, 5, Sort.by("id").descending()));
 	}
 
 	@Test
 	void findByJoinFollow() {
-		postRepository.findByJoinFollow(1L, PageRequest.of(0, 5, Sort.by("id").descending()));
+		postRepository.findByJoinFollow(5L, PageRequest.of(0, 5, Sort.by("id").descending()));
 	}
 
 	@Test
 	void findByLastIdAndJoinFollow() {
-		postRepository.findByJoinFollowAndLastIdLessThan(1L, 100L, PageRequest.of(0, 5, Sort.by("id").descending()));
+		postRepository.findByJoinFollowAndLastIdLessThan(5L, 100L, PageRequest.of(0, 5, Sort.by("id").descending()));
 	}
 }
