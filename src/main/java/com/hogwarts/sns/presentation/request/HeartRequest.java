@@ -2,10 +2,12 @@ package com.hogwarts.sns.presentation.request;
 
 import com.hogwarts.sns.domain.Type;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-public class LikeRequest {
+@AllArgsConstructor
+public class HeartRequest {
 	private Type type;
 	private Long parentId;
 }

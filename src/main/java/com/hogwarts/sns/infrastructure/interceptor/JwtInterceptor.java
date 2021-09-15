@@ -12,13 +12,11 @@ import com.hogwarts.sns.utils.HeaderUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RequiredArgsConstructor
 @Component
 public class JwtInterceptor extends HandlerInterceptorAdapter {
-	
+
 	private final JwtService jwtService;
 
 	@SneakyThrows
@@ -27,12 +25,12 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
 		String accessToken = HeaderUtil.getAccessToken(request);
 
 		jwtService.verifyAccessToken(accessToken);
-		String uid = jwtService.decode(accessToken);
+		String userId = jwtService.decode(accessToken);
 
-		if (!jwtService.hasRefreshToken(uid)) {
+		if (!jwtService.hasRefreshToken(userId)) {
 			throw new AuthenticationException();
 		}
 
-		return super.preHandle(request, response, handler);
+		return true;
 	}
 }

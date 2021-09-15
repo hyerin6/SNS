@@ -12,7 +12,6 @@ import com.hogwarts.sns.infrastructure.persistence.CommentRepository;
 import com.hogwarts.sns.presentation.exception.ResponseException;
 import com.hogwarts.sns.presentation.exception.e4xx.NotFoundException;
 import com.hogwarts.sns.presentation.request.CreateCommentRequest;
-import com.hogwarts.sns.presentation.response.CommentsResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -40,9 +39,8 @@ public class CommentService {
 	}
 
 	@Transactional(readOnly = true)
-	public CommentsResponse getComments(Long postId) {
-		List<Comment> comments = commentRepository.findByPostId(postId);
-		return new CommentsResponse(comments);
+	public List<Comment> getComments(Long postId) {
+		return commentRepository.findByPostId(postId);
 	}
 
 }

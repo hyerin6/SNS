@@ -2,10 +2,10 @@ package com.hogwarts.sns.application;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hogwarts.sns.domain.Image;
 import com.hogwarts.sns.domain.Post;
 import com.hogwarts.sns.domain.User;
 import com.hogwarts.sns.infrastructure.persistence.PostRepository;
@@ -13,7 +13,6 @@ import com.hogwarts.sns.presentation.exception.ResponseException;
 import com.hogwarts.sns.presentation.exception.e4xx.NotFoundException;
 import com.hogwarts.sns.presentation.request.CreatePostRequest;
 import com.hogwarts.sns.presentation.request.ModifyPostRequest;
-import com.hogwarts.sns.presentation.response.PostResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,31 +26,43 @@ public class PostService {
 	private final ImageService imageService;
 
 	@Transactional
-	public void addPost(User user, CreatePostRequest request) {
+	public void create(User user, CreatePostRequest request) {
 		Post post = Post.builder()
 			.user(user)
 			.content(request.getContent())
 			.build();
 
 		postRepository.save(post);
-		imageService.addImage(post, request.getImages());
+		imageService.create(post, request.getImages());
 	}
 
 	@Transactional(readOnly = true)
-	public PostResponse getPost(Long id) throws ResponseException {
-		Post post = postRepository.findById(id)
+	public Post getPost(Long id) throws ResponseException {
+		return postRepository.findById(id)
 			.orElseThrow(NotFoundException.POST);
+	}
 
-		List<Image> images = imageService.getImage(id);
+	@Transactional(readOnly = true)
+	public List<Post> getPosts(Long userId, Long lastPostId, Pageable pageable) {
+		if (lastPostId > 0) {
+			return postRepository.findByUserIdAndIdLessThan(userId, lastPostId, pageable);
+		}
 
-		return PostResponse.builder()
-			.post(post)
-			.images(images)
-			.build();
+		return postRepository.findByUserId(userId, pageable);
+
+	}
+
+	@Transactional(readOnly = true)
+	public List<Post> getFeed(Long userId, Long lastPostId, Pageable pageable) {
+		if (lastPostId > 0) {
+			return postRepository.findByJoinFollowAndLastIdLessThan(userId, lastPostId, pageable);
+		}
+
+		return postRepository.findByJoinFollow(userId, pageable);
 	}
 
 	@Transactional
-	public void modifyPost(Long id, ModifyPostRequest request) throws ResponseException {
+	public void modify(Long id, ModifyPostRequest request) throws ResponseException {
 		Post post = postRepository.findById(id)
 			.orElseThrow(NotFoundException.POST);
 
@@ -59,7 +70,7 @@ public class PostService {
 	}
 
 	@Transactional
-	public void deletePost(Long id) {
+	public void delete(Long id) {
 		imageService.delete(id);
 		postRepository.deleteById(id);
 	}
