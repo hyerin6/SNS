@@ -32,7 +32,7 @@ public class LoggingFilter extends OncePerRequestFilter {
 			String method = request.getMethod();
 
 			LoggingRequest loggingRequest = new LoggingRequest(requestURI, method);
-			String log = JsonUtils.toString(loggingRequest);
+			String log = JsonUtils.toJson(loggingRequest);
 
 			logger.info(log);
 		}
