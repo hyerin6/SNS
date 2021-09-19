@@ -12,4 +12,5 @@ import lombok.Setter;
 public class CreatePostRequest {
 	private String content;
 	private List<MultipartFile> images;
+
 }

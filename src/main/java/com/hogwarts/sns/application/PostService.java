@@ -49,7 +49,6 @@ public class PostService {
 		}
 
 		return postRepository.findByUserId(userId, pageable);
-
 	}
 
 	@Transactional(readOnly = true)

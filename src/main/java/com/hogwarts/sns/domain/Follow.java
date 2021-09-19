@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
@@ -33,12 +32,12 @@ import lombok.NoArgsConstructor;
 public class Follow {
 
 	@Id
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "follower_id")
 	private User follower;
 
 	@Id
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "following_id")
 	private User following;
 
@@ -55,7 +54,7 @@ public class Follow {
 	public static class PK implements Serializable {
 
 		private static final long serialVersionUID = 1L;
-		
+
 		@JoinColumn(name = "follower_id")
 		private User follower;
 
