@@ -28,16 +28,18 @@ public class LoggingFilter extends OncePerRequestFilter {
 		} catch (Exception e) {
 			logger.error(e);
 		} finally {
-			String requestURI = request.getRequestURI();
-			String method = request.getMethod();
-
-			LoggingRequest loggingRequest = new LoggingRequest(requestURI, method);
+			LoggingRequest loggingRequest = getLoggingRequest(requestWrapper);
 			String log = JsonUtils.toJson(loggingRequest);
-
 			logger.info(log);
 		}
 
 		responseWrapper.copyBodyToResponse();
+	}
+
+	private LoggingRequest getLoggingRequest(ContentCachingRequestWrapper request) {
+		String requestURI = request.getRequestURI();
+		String method = request.getMethod();
+		return new LoggingRequest(requestURI, method);
 	}
 
 }
