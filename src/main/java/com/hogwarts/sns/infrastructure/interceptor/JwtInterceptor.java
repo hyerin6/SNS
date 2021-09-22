@@ -8,13 +8,13 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.hogwarts.sns.infrastructure.security.JwtService;
 import com.hogwarts.sns.presentation.exception.e4xx.AuthenticationException;
-import com.hogwarts.sns.utils.HeaderUtil;
+import com.hogwarts.sns.utils.HeaderUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
-@RequiredArgsConstructor
 @Component
+@RequiredArgsConstructor
 public class JwtInterceptor extends HandlerInterceptorAdapter {
 
 	private final JwtService jwtService;
@@ -22,7 +22,7 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
 	@SneakyThrows
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-		String accessToken = HeaderUtil.getAccessToken(request);
+		String accessToken = HeaderUtils.getAccessToken(request);
 
 		jwtService.verifyAccessToken(accessToken);
 		String userId = jwtService.decode(accessToken);
