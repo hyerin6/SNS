@@ -19,17 +19,16 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 	@Query(value = "SELECT p"
 		+ " FROM Post p"
-		+ " JOIN Follow f ON p.user.id = f.follower.id"
-		+ " WHERE p.user.id = :userId"
-		+ " AND  f.follower.id = :userId")
+		+ " JOIN Follow f ON p.user.id = f.following.id"
+		+ " WHERE f.follower.id = :userId")
 	List<Post> findByJoinFollow(@Param("userId") Long userId, Pageable pageable);
 
 	@Query(value = "SELECT p"
 		+ " FROM Post p"
-		+ " JOIN Follow f ON p.user.id = f.follower.id"
-		+ " WHERE p.user.id = :userId"
-		+ " AND  f.follower.id = :userId"
+		+ " JOIN Follow f ON p.user.id = f.following.id"
+		+ " WHERE f.follower.id = :userId"
 		+ " AND p.id < :lastPostId")
 	List<Post> findByJoinFollowAndLastIdLessThan(@Param("userId") Long userId, @Param("lastPostId") Long lastPostId,
 		Pageable pageable);
+
 }

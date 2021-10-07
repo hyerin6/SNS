@@ -55,12 +55,11 @@ public class Follow {
 	public static class PK implements Serializable {
 
 		private static final long serialVersionUID = 1L;
-		
+
 		@JoinColumn(name = "follower_id")
 		private User follower;
 
 		@JoinColumn(name = "following_id")
 		private User following;
 	}
-
 }
