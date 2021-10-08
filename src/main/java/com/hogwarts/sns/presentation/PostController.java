@@ -24,6 +24,7 @@ import com.hogwarts.sns.application.PostService;
 import com.hogwarts.sns.application.UserService;
 import com.hogwarts.sns.domain.Image;
 import com.hogwarts.sns.domain.Post;
+import com.hogwarts.sns.domain.PostIndex;
 import com.hogwarts.sns.domain.Type;
 import com.hogwarts.sns.domain.User;
 import com.hogwarts.sns.infrastructure.security.AuthenticationPrincipal;
@@ -31,6 +32,7 @@ import com.hogwarts.sns.presentation.exception.ResponseException;
 import com.hogwarts.sns.presentation.request.CreatePostRequest;
 import com.hogwarts.sns.presentation.request.HeartRequest;
 import com.hogwarts.sns.presentation.request.ModifyPostRequest;
+import com.hogwarts.sns.presentation.request.PostSearchRequest;
 import com.hogwarts.sns.presentation.request.PostsRequest;
 import com.hogwarts.sns.presentation.response.PostResponse;
 
@@ -145,4 +147,26 @@ public class PostController {
 		return ResponseEntity.ok(postResponses);
 	}
 
+	@PostMapping("/posts/search")
+	public ResponseEntity<List<PostResponse>> search(@RequestBody PostSearchRequest searchRequest) {
+		PageRequest pageRequest = PageRequest.of(PAGE, SIZE, Sort.by(SORT_PROPERTY).descending());
+		List<PostIndex> postIndices = postService.getAllIndex(searchRequest, pageRequest);
+
+		List<PostResponse> postResponses = new ArrayList<>();
+		for (PostIndex postIndex : postIndices) {
+			List<Image> images = imageService.getImage(Long.valueOf(postIndex.getId()));
+			HeartRequest heartRequest = new HeartRequest(Type.POST, Long.valueOf(postIndex.getId()));
+			int hearCnt = heartService.getHeartCnt(heartRequest);
+			Post post = Post.builder()
+				.id(Long.valueOf(postIndex.getId()))
+				.content(postIndex.getContent())
+				.createdAt(postIndex.getCreatedAt().toLocalDateTime())
+				.updatedAt(postIndex.getUpdatedAt().toLocalDateTime())
+				.build();
+			PostResponse response = new PostResponse(post, images, hearCnt);
+			postResponses.add(response);
+		}
+
+		return ResponseEntity.ok(postResponses);
+	}
 }
