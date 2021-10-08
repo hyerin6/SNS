@@ -11,9 +11,7 @@ import com.hogwarts.sns.domain.PostIndex;
 
 @Repository
 public interface PostIndexRepository extends ElasticsearchRepository<PostIndex, Long> {
-
-	List<PostIndex> findByContent(String content);
-
+	
 	@Query("{\"match\": {\"content\": \"?0\"}}")
 	List<PostIndex> searchByContent(String content, Pageable pageable);
 

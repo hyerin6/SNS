@@ -9,7 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hogwarts.sns.domain.PostIndex;
@@ -44,8 +43,8 @@ class PostServiceTest {
 			postService.create(null, p);
 		}
 
-		PageRequest pageRequest = PageRequest.of(0, 5, Sort.by("id").descending());
-		PostSearchRequest request = new PostSearchRequest("우");
+		PageRequest pageRequest = PageRequest.of(0, 5);
+		PostSearchRequest request = new PostSearchRequest("우리");
 
 		List<PostIndex> index = postService.getAllIndex(request, pageRequest);
 
