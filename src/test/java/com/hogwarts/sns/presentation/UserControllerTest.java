@@ -1,9 +1,7 @@
 package com.hogwarts.sns.presentation;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import com.hogwarts.sns.application.UserService;
+import com.hogwarts.sns.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,57 +15,60 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import com.hogwarts.sns.application.UserService;
-import com.hogwarts.sns.domain.User;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 class UserControllerTest {
 
-	@Autowired
-	WebApplicationContext context;
+    @Autowired
+    WebApplicationContext context;
 
-	MockMvc mockMvc;
+    MockMvc mockMvc;
 
-	@Autowired
-	UserService userService;
+    @Autowired
+    UserService userService;
 
-	String TOKEN = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MzIxNTM1ODEsInN1YiI6IjE3MzUwOTkxODIifQ.Q2BpE2KJT_HkDEAh3U4lcCONcF68OleQDTTZa_cdfAo";
+    private String TOKEN = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MzQwNDcxMDksInN1YiI6IjE3MzUwOTkxODIifQ.gf0l4vqwHtDmkrfg5FaGhwG3iqyhrN4lYHkWXf9wdFY";
 
-	User user;
+    @BeforeEach
+    public void setUp() {
+        this.mockMvc =
+                MockMvcBuilders.webAppContextSetup(context)
+                        .addFilter(new CharacterEncodingFilter("UTF-8", true))
+                        .alwaysDo(print())
+                        .build();
+    }
 
-	@BeforeEach
-	void setUp() {
-		this.mockMvc =
-			MockMvcBuilders.webAppContextSetup(context)
-				.addFilter(new CharacterEncodingFilter("UTF-8", true))
-				.alwaysDo(print())
-				.build();
+    private void setUser() {
+        User user = User.builder()
+                .id(1L)
+                .userId("1735099182")
+                .name("박혜린")
+                .profile("profile image url")
+                .email("hyerin_0611@naver.com")
+                .build();
+        userService.create(user);
+    }
 
-		user = User.builder()
-			.id(1L)
-			.userId("1735099182")
-			.name("박혜린")
-			.profile("profile image url")
-			.email("hyerin_0611@naver.com")
-			.build();
-
-		userService.create(user);
-	}
-
-	@DisplayName("로그인한 사용자 정보 조회하기")
-	@Test
-	void getMyInfo() throws Exception {
-		this.mockMvc.perform(get("/api/myInfo")
-				.contentType(MediaType.APPLICATION_JSON)
-				.header("Authorization", TOKEN))
-			.andDo(print())
-			.andExpect(status().is(HttpStatus.OK.value()))
-			.andExpect(jsonPath("$.user.id").value(1L))
-			.andExpect(jsonPath("$.user.userId").value("1735099182"))
-			.andExpect(jsonPath("$.user.name").value("박혜린"))
-			.andExpect(jsonPath("$.user.profile").value("profile image url"))
-			.andExpect(jsonPath("$.user.email").value("hyerin_0611@naver.com"));
-	}
+    @DisplayName("로그인한 사용자 정보 조회하기")
+    @Test
+    public void getMyInfo() throws Exception {
+        setUser();
+        User user = userService.getUser(1L);
+        this.mockMvc.perform(get("/api/myInfo")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", TOKEN))
+                .andDo(print())
+                .andExpect(status().is(HttpStatus.OK.value()))
+                .andExpect(jsonPath("$.user.id").value(user.getId()))
+                .andExpect(jsonPath("$.user.userId").value(user.getUserId()))
+                .andExpect(jsonPath("$.user.name").value(user.getName()))
+                .andExpect(jsonPath("$.user.profile").value(user.getProfile()))
+                .andExpect(jsonPath("$.user.email").value(user.getEmail()));
+    }
 
 }
