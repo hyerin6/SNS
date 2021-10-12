@@ -37,7 +37,7 @@ public class FollowService {
 
 	@Transactional(readOnly = true)
 	public List<User> getFollowers(Long userId, Pageable pageable) {
-		return followRepository.findByFollowing(userId, pageable)
+		return followRepository.findByFollowingId(userId, pageable)
 			.stream()
 			.map(Follow::getFollower)
 			.collect(Collectors.toList());
@@ -45,7 +45,7 @@ public class FollowService {
 
 	@Transactional(readOnly = true)
 	public List<User> getFollowings(Long userId, Pageable pageable) {
-		return followRepository.findByFollower(userId, pageable)
+		return followRepository.findByFollowerId(userId, pageable)
 			.stream()
 			.map(Follow::getFollowing)
 			.collect(Collectors.toList());
