@@ -1,7 +1,7 @@
 spring:
   elasticsearch:
     rest:
-      uris: http://localhost:9200
+      uris: http://34.64.149.7:9200
   profiles:
     include:
       - aws
