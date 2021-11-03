@@ -29,7 +29,7 @@ public class AuthorizeController {
 
 	@GetMapping("/")
 	public ModelAndView home() {
-		return new ModelAndView("/index", "signinUrl", signinUrl);
+		return new ModelAndView("index", "signinUrl", signinUrl);
 	}
 
 	@GetMapping("/login/oauth2/code/kakao")
@@ -45,7 +45,7 @@ public class AuthorizeController {
 			accessToken = authService.signIn(user.getUserId());
 		}
 
-		ModelAndView modelAndView = new ModelAndView("/user");
+		ModelAndView modelAndView = new ModelAndView("user");
 		modelAndView.addObject("userId", kakaoProfile.getId())
 			.addObject("email", kakaoProfile.getKakaoAccount().getEmail())
 			.addObject("name", kakaoProfile.getKakaoAccount().getProfile().getNickname())
