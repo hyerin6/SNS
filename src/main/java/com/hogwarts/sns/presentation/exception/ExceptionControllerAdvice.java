@@ -38,7 +38,7 @@ public class ExceptionControllerAdvice {
 
 	@ExceptionHandler({AuthenticationException.class, JwtException.class})
 	public ModelAndView AuthenticationException(Exception e) {
-		return new ModelAndView("/index");
+		return new ModelAndView("index");
 	}
 
 	@ExceptionHandler(ExpiredAccessTokenException.class)
@@ -46,19 +46,19 @@ public class ExceptionControllerAdvice {
 		String userId = e.getSub();
 
 		if (!redisTemplate.hasKey(userId)) {
-			return new ModelAndView("/index");
+			return new ModelAndView("index");
 		}
 
 		String refreshToken = redisTemplate.opsForValue().get(userId);
 		jwtService.verifyRefreshToken(refreshToken);
 		String accessToken = jwtService.createAccessToken(userId);
-		return new ModelAndView("/login", "accessToken", accessToken);
+		return new ModelAndView("login", "accessToken", accessToken);
 	}
 
 	@ExceptionHandler(ExpiredRefreshTokenException.class)
 	public ModelAndView expiredRefreshTokenException(ExpiredRefreshTokenException e) {
 		authService.invalidate(e.getSub());
-		return new ModelAndView("/index");
+		return new ModelAndView("index");
 	}
 
 	@ExceptionHandler(FileUploadException.class)
