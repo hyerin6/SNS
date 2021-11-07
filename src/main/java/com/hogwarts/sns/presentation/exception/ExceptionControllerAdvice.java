@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.hogwarts.sns.infrastructure.security.AuthService;
 import com.hogwarts.sns.infrastructure.security.JwtService;
 import com.hogwarts.sns.presentation.exception.e4xx.AuthenticationException;
 import com.hogwarts.sns.presentation.exception.e4xx.ExpiredAccessTokenException;
@@ -26,8 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 public class ExceptionControllerAdvice {
 
 	private final JwtService jwtService;
-
-	private final AuthService authService;
 
 	private final RedisTemplate<String, String> redisTemplate;
 
@@ -57,7 +54,6 @@ public class ExceptionControllerAdvice {
 
 	@ExceptionHandler(ExpiredRefreshTokenException.class)
 	public ModelAndView expiredRefreshTokenException(ExpiredRefreshTokenException e) {
-		authService.invalidate(e.getSub());
 		return new ModelAndView("index");
 	}
 
