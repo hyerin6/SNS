@@ -37,18 +37,11 @@ public class AuthService {
 	}
 
 	public String signIn(String userId) {
-		invalidate(userId);
 		String accessToken = jwtService.createAccessToken(userId);
 		String refreshToken = jwtService.createRefreshToken(userId);
 		redisTemplate.opsForValue().set(userId, refreshToken);
-		redisTemplate.expire(userId, 30, TimeUnit.DAYS);
+		redisTemplate.expire(userId, 168, TimeUnit.HOURS);
 		return accessToken;
-	}
-
-	public void invalidate(String userId) {
-		if (redisTemplate.hasKey(userId)) {
-			redisTemplate.delete(userId);
-		}
 	}
 
 }
