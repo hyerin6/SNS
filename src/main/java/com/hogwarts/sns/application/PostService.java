@@ -1,6 +1,5 @@
 package com.hogwarts.sns.application;
 
-import java.time.ZoneId;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
@@ -39,16 +38,16 @@ public class PostService {
 
 		Post savedPost = postRepository.save(post);
 
-		imageService.create(post, request.getImages());
+		// imageService.create(post, request.getImages());
 
-		PostIndex postIndex = PostIndex.builder()
-			.id(String.valueOf(savedPost.getId()))
-			.content(request.getContent())
-			.createdAt(savedPost.getCreatedAt().atZone(ZoneId.of("Asia/Seoul")))
-			.updatedAt(savedPost.getUpdatedAt().atZone(ZoneId.of("Asia/Seoul")))
-			.build();
-
-		postIndexRepository.save(postIndex);
+		// PostIndex postIndex = PostIndex.builder()
+		// 	.id(String.valueOf(savedPost.getId()))
+		// 	.content(request.getContent())
+		// 	.createdAt(savedPost.getCreatedAt().atZone(ZoneId.of("Asia/Seoul")))
+		// 	.updatedAt(savedPost.getUpdatedAt().atZone(ZoneId.of("Asia/Seoul")))
+		// 	.build();
+		//
+		// postIndexRepository.save(postIndex);
 	}
 
 	@Transactional(readOnly = true)
