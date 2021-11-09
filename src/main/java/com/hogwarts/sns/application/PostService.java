@@ -12,6 +12,7 @@ import com.hogwarts.sns.domain.PostIndex;
 import com.hogwarts.sns.domain.User;
 import com.hogwarts.sns.infrastructure.persistence.PostIndexRepository;
 import com.hogwarts.sns.infrastructure.persistence.PostRepository;
+import com.hogwarts.sns.infrastructure.persistence.TimelineRepository;
 import com.hogwarts.sns.presentation.exception.ResponseException;
 import com.hogwarts.sns.presentation.exception.e4xx.NotFoundException;
 import com.hogwarts.sns.presentation.request.CreatePostRequest;
@@ -29,6 +30,7 @@ public class PostService {
 	private final PostRepository postRepository;
 	private final ImageService imageService;
 	private final PostIndexRepository postIndexRepository;
+	private final TimelineRepository timelineRepository;
 
 	@Transactional
 	public void create(User user, CreatePostRequest request) {
@@ -69,10 +71,10 @@ public class PostService {
 	@Transactional(readOnly = true)
 	public List<Post> getFeed(Long userId, Long lastPostId, Pageable pageable) {
 		if (lastPostId > 0) {
-			return postRepository.findByJoinFollowAndLastIdLessThan(userId, lastPostId, pageable);
+			return timelineRepository.findByJoinFollow(userId, lastPostId, pageable);
 		}
 
-		return postRepository.findByJoinFollow(userId, pageable);
+		return timelineRepository.findByFirstJoinFollow(userId, pageable);
 	}
 
 	@Transactional

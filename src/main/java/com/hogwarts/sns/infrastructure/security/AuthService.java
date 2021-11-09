@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import com.hogwarts.sns.application.FollowService;
 import com.hogwarts.sns.application.UserService;
 import com.hogwarts.sns.domain.User;
 import com.hogwarts.sns.presentation.response.KakaoProfile;
@@ -19,6 +20,8 @@ public class AuthService {
 
 	private final UserService userService;
 
+	private final FollowService followService;
+
 	private final JwtService jwtService;
 
 	private final RedisTemplate<String, String> redisTemplate;
@@ -32,7 +35,7 @@ public class AuthService {
 			.build();
 
 		userService.create(user);
-
+		followService.follow(user, user);
 		return signIn(user.getUserId());
 	}
 
