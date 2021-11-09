@@ -1,5 +1,7 @@
 package com.hogwarts.sns.infrastructure.security;
 
+import static com.hogwarts.sns.utils.constants.AuthConstants.*;
+
 import java.util.Base64;
 import java.util.Date;
 
@@ -29,12 +31,6 @@ public class JwtService {
 
 	@Value("${jwt.secret}")
 	private String SECRET_KEY;
-
-	private static final String TOKEN_REGEX = "\\.";
-
-	private static final Integer ACCESS_EXPIRE = 1 * 1000 * 60 * 60 * 24; // 1일
-
-	private static final Integer REFRESH_EXPIRE = 15 * 1000 * 60 * 60 * 24; // 15일
 
 	private final RedisTemplate<String, String> redisTemplate;
 

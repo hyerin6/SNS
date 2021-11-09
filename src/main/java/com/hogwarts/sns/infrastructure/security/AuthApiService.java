@@ -1,5 +1,7 @@
 package com.hogwarts.sns.infrastructure.security;
 
+import static com.hogwarts.sns.utils.constants.AuthConstants.*;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,8 +22,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class AuthApiService {
-
-	private final static String TOKEN_TYPE = "Bearer ";
 
 	private final RestTemplate restTemplate;
 
@@ -48,7 +48,7 @@ public class AuthApiService {
 
 	public String getToken(String code) {
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-type", contentType);
+		headers.add(HttpHeaders.CONTENT_TYPE, contentType);
 
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("grant_type", grantType);
@@ -71,8 +71,8 @@ public class AuthApiService {
 
 	public KakaoProfile getProfile(String accessToken) {
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-type", contentType);
-		headers.add("Authorization", TOKEN_TYPE + accessToken);
+		headers.add(HttpHeaders.CONTENT_TYPE, contentType);
+		headers.add(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + accessToken);
 
 		HttpEntity<String> request = new HttpEntity<>(headers);
 

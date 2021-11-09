@@ -1,5 +1,7 @@
 package com.hogwarts.sns.infrastructure.security;
 
+import static com.hogwarts.sns.utils.constants.AuthConstants.*;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +31,7 @@ public class AuthorizeController {
 
 	@GetMapping("/")
 	public ModelAndView home() {
-		return new ModelAndView("index", "signinUrl", signinUrl);
+		return new ModelAndView(VIEW_INDEX, SIGNIN_URL, signinUrl);
 	}
 
 	@GetMapping("/login/oauth2/code/kakao")
@@ -45,12 +47,12 @@ public class AuthorizeController {
 			accessToken = authService.signIn(user.getUserId());
 		}
 
-		ModelAndView modelAndView = new ModelAndView("user");
-		modelAndView.addObject("userId", kakaoProfile.getId())
-			.addObject("email", kakaoProfile.getKakaoAccount().getEmail())
-			.addObject("name", kakaoProfile.getKakaoAccount().getProfile().getNickname())
-			.addObject("profile", kakaoProfile.getKakaoAccount().getProfile().getProfileImageUrl())
-			.addObject("accessToken", accessToken);
+		ModelAndView modelAndView = new ModelAndView(USER);
+		modelAndView.addObject(USERID, kakaoProfile.getId())
+			.addObject(EMAIL, kakaoProfile.getKakaoAccount().getEmail())
+			.addObject(NAME, kakaoProfile.getKakaoAccount().getProfile().getNickname())
+			.addObject(PROFILE, kakaoProfile.getKakaoAccount().getProfile().getProfileImageUrl())
+			.addObject(ACCESS_TOKEN, accessToken);
 		return modelAndView;
 	}
 

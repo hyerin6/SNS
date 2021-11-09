@@ -1,6 +1,7 @@
 package com.hogwarts.sns.presentation;
 
 import static com.hogwarts.sns.presentation.response.ResponseEntityConstants.*;
+import static com.hogwarts.sns.utils.constants.PagingConstants.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,10 +43,6 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api")
 public class PostController {
-
-	private static final int PAGE = 0;
-	private static final int SIZE = 5;
-	private static final String SORT_PROPERTY = "id";
 
 	private final PostService postService;
 	private final ImageService imageService;
