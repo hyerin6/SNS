@@ -3,6 +3,8 @@ package com.hogwarts.sns.application;
 import java.time.ZoneId;
 import java.util.List;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,9 +22,7 @@ import com.hogwarts.sns.presentation.request.ModifyPostRequest;
 import com.hogwarts.sns.presentation.request.PostSearchRequest;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class PostService {
@@ -53,12 +53,14 @@ public class PostService {
 		postIndexRepository.save(postIndex);
 	}
 
+	@Cacheable(value = "post", key = "#id")
 	@Transactional(readOnly = true)
 	public Post getPost(Long id) throws ResponseException {
 		return postRepository.findById(id)
 			.orElseThrow(NotFoundException.POST);
 	}
 
+	@Cacheable(value = "posts", key = "#userId + 'posts' + #lastPostId")
 	@Transactional(readOnly = true)
 	public List<Post> getPosts(Long userId, Long lastPostId, Pageable pageable) {
 		if (lastPostId > 0) {
@@ -68,6 +70,7 @@ public class PostService {
 		return postRepository.findByUserId(userId, pageable);
 	}
 
+	@Cacheable(value = "feed", key = "#userId + 'feed' + #lastPostId")
 	@Transactional(readOnly = true)
 	public List<Post> getFeed(Long userId, Long lastPostId, Pageable pageable) {
 		if (lastPostId > 0) {
@@ -77,6 +80,7 @@ public class PostService {
 		return timelineRepository.findByFirstJoinFollow(userId, pageable);
 	}
 
+	@CacheEvict(value = "post", key = "#id")
 	@Transactional
 	public void modify(Long id, ModifyPostRequest request) throws ResponseException {
 		Post post = postRepository.findById(id)
@@ -85,6 +89,7 @@ public class PostService {
 		post.modifyContent(request.getContent());
 	}
 
+	@CacheEvict(value = "post", key = "#id")
 	@Transactional
 	public void delete(Long id) {
 		imageService.delete(id);

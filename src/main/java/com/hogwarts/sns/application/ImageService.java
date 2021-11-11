@@ -3,6 +3,8 @@ package com.hogwarts.sns.application;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,11 +35,13 @@ public class ImageService {
 		imageRepository.saveAll(images);
 	}
 
+	@Cacheable(value = "image", key = "#postId")
 	@Transactional(readOnly = true)
 	public List<Image> getImage(Long postId) {
 		return imageRepository.findByPostId(postId);
 	}
 
+	@CacheEvict(value = "image", key = "#postId")
 	@Transactional
 	public void delete(Long postId) {
 		List<Image> images = getImage(postId);

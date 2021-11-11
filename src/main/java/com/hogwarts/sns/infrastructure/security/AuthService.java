@@ -2,7 +2,7 @@ package com.hogwarts.sns.infrastructure.security;
 
 import java.util.concurrent.TimeUnit;
 
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.hogwarts.sns.application.FollowService;
@@ -24,7 +24,7 @@ public class AuthService {
 
 	private final JwtService jwtService;
 
-	private final RedisTemplate<String, String> redisTemplate;
+	private final StringRedisTemplate redisTemplate;
 
 	public String signUp(KakaoProfile kakaoProfile) {
 		User user = User.builder()
