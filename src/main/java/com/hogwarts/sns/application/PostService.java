@@ -96,6 +96,7 @@ public class PostService {
 		postRepository.deleteById(id);
 	}
 
+	@Cacheable(value = "search", key = "#request.keyword")
 	public List<PostIndex> getAllIndex(PostSearchRequest request, Pageable pageable) {
 		return postIndexRepository.searchByContent(request.getKeyword(), pageable);
 	}
