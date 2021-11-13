@@ -1,6 +1,5 @@
 package com.hogwarts.sns.application;
 
-import java.time.ZoneId;
 import java.util.List;
 
 import org.springframework.cache.annotation.CacheEvict;
@@ -9,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hogwarts.sns.domain.Post;
 import com.hogwarts.sns.domain.PostIndex;
 import com.hogwarts.sns.domain.User;
@@ -31,26 +32,20 @@ public class PostService {
 	private final ImageService imageService;
 	private final PostIndexRepository postIndexRepository;
 	private final TimelineRepository timelineRepository;
+	private final Producer producer;
+	private final ObjectMapper objectMapper;
 
 	@Transactional
-	public void create(User user, CreatePostRequest request) {
+	public void create(User user, CreatePostRequest request) throws JsonProcessingException {
 		Post post = Post.builder()
 			.user(user)
 			.content(request.getContent())
 			.build();
 
-		Post savedPost = postRepository.save(post);
+		String jsonPost = objectMapper.writeValueAsString(post);
+		producer.sendTo(jsonPost);
 
-		imageService.create(post, request.getImages());
-
-		PostIndex postIndex = PostIndex.builder()
-			.id(String.valueOf(savedPost.getId()))
-			.content(request.getContent())
-			.createdAt(savedPost.getCreatedAt().atZone(ZoneId.of("Asia/Seoul")))
-			.updatedAt(savedPost.getUpdatedAt().atZone(ZoneId.of("Asia/Seoul")))
-			.build();
-
-		postIndexRepository.save(postIndex);
+		// imageService.create(post, request.getImages());
 	}
 
 	@Cacheable(value = "post", key = "#id")
