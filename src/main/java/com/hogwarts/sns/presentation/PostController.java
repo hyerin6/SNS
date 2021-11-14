@@ -147,10 +147,9 @@ public class PostController {
 
 	@PostMapping("/posts/search")
 	public ResponseEntity<List<PostResponse>> search(@RequestBody PostSearchRequest searchRequest) {
-		PageRequest pageRequest = PageRequest.of(PAGE, SIZE, Sort.by(SORT_PROPERTY).descending());
-		List<PostIndex> postIndices = postService.getAllIndex(searchRequest, pageRequest);
-
+		List<PostIndex> postIndices = postService.getAllIndex(searchRequest);
 		List<PostResponse> postResponses = new ArrayList<>();
+
 		for (PostIndex postIndex : postIndices) {
 			List<Image> images = imageService.getImage(Long.valueOf(postIndex.getId()));
 			HeartRequest heartRequest = new HeartRequest(Type.POST, Long.valueOf(postIndex.getId()));

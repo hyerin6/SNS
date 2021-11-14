@@ -1,5 +1,6 @@
 package com.hogwarts.sns.application;
 
+import java.time.ZoneId;
 import java.util.List;
 
 import org.springframework.cache.annotation.CacheEvict;
@@ -45,7 +46,14 @@ public class PostService {
 		String jsonPost = objectMapper.writeValueAsString(post);
 		producer.sendTo(jsonPost);
 
-		// imageService.create(post, request.getImages());
+		PostIndex postIndex = PostIndex.builder()
+			.id(String.valueOf(post.getId()))
+			.content(post.getContent())
+			.createdAt(post.getCreatedAt().atZone(ZoneId.of("Asia/Seoul")))
+			.updatedAt(post.getUpdatedAt().atZone(ZoneId.of("Asia/Seoul")))
+			.build();
+
+		postIndexRepository.save(postIndex);
 	}
 
 	@Cacheable(value = "post", key = "#id")
@@ -92,8 +100,7 @@ public class PostService {
 	}
 
 	@Cacheable(value = "search", key = "#request.keyword")
-	public List<PostIndex> getAllIndex(PostSearchRequest request, Pageable pageable) {
-		return postIndexRepository.searchByContent(request.getKeyword(), pageable);
+	public List<PostIndex> getAllIndex(PostSearchRequest request) {
+		return postIndexRepository.searchByContent(request.getKeyword());
 	}
-
 }
