@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hogwarts.sns.application.HeartService;
 import com.hogwarts.sns.application.ImageService;
 import com.hogwarts.sns.application.PostService;
@@ -51,7 +52,7 @@ public class PostController {
 
 	@PostMapping("/post")
 	public ResponseEntity<Void> create(@AuthenticationPrincipal String userId,
-		@ModelAttribute CreatePostRequest request) {
+		@ModelAttribute CreatePostRequest request) throws JsonProcessingException {
 		User user = userService.getUser(userId);
 		postService.create(user, request);
 		return CREATED;
