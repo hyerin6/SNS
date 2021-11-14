@@ -53,7 +53,7 @@ public class CacheConfig {
 		builder.cacheDefaults(configuration);
 		return builder.build();
 	}
-
+	
 	private ObjectMapper objectMapper() {
 		PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator
 			.builder()
